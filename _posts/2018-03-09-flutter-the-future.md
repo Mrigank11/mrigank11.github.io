@@ -2,6 +2,9 @@
 layout: post
 title: 'Flutter: The master of all'
 date: 2018-03-09 00:11 +0530
+categories: android
+tags: flutter dart
+keywords: android, flutter, apps, hybrid, google, dart
 ---
 Today, I explored **Flutter**, a SDK by Google for cross-platform mobile app development(android and ios). 
 
