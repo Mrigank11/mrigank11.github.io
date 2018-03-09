@@ -34,7 +34,7 @@ plugins:
   - jekyll-feed
   - jemoji
 
-permalink: /:title/
+permalink: /:year/:month/:title/
 paginate_path: /posts/:num/
 paginate: 5
 
