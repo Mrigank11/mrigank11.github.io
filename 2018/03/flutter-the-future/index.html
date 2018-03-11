@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+
+  document.getElementsByTagName("html")[0].classList.add("wf-loading")
+</script>
+<style>
+.wf-loading{
+  display: none;
+}
+</style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Flutter: The master of all</title>
+  <meta name="description" content="Today, I explored Flutter, a SDK by Google for cross-platform mobile app development(android and ios).">
+  
+    
+    <meta name="keywords" content="android, flutter, apps, hybrid, google, dart">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://mrigank11.github.io/2018/03/flutter-the-future/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Mrigank's Blog" href="https://mrigank11.github.io/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="mrigankkrishan">
+  <meta name="twitter:title" content="Flutter: The master of all">
+  <meta name="twitter:description" content="Today, I explored Flutter, a SDK by Google for cross-platform mobile app development(android and ios).">
+  
+    <meta name="twitter:creator" content="mrigankkrishan">
+  
+  
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-68898819-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+</head>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Mrigank's Blog</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="https://github.com/Mrigank11">GitHub</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Flutter: The master of all</h1>
+    
+    <p class="post-meta"><time datetime="2018-03-08T18:41:00+00:00" itemprop="datePublished">Mar 8, 2018</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/android/">android</a>
+      
+    
+  
+
+
+ •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/tags/flutter/">flutter</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/tags/dart/">dart</a>
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>Today, I explored <strong>Flutter</strong>, a SDK by Google for cross-platform mobile app development(android and ios).</p>
+
+<h2 id="about-flutter">About Flutter</h2>
+
+<p>Flutter is an amazing product. Its like hybrid apps reborn!<img class="emoji" title=":thumbsup:" alt=":thumbsup:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f44d.png" height="20" width="20"></p>
+<blockquote>
+  <p>the simplicity of Ionic, reactivity of React and performance of native, you can find all at one place.</p>
+</blockquote>
+
+<p>Flutter uses <code class="highlighter-rouge">dart</code> as its primary language which again is a great choice. I was able to get started with it in minutes. I found its syntax very similar to Typescript. It works with types only if you want to. Dart is much cooler than javascript but performs remarkably well.</p>
+
+<p>The interesting thing about flutter is that is has created its own UI elements, but unlike <code class="highlighter-rouge">Ionic</code>, whose components are built on top of web technologies, flutter talks directly to the canvas.</p>
+
+<blockquote>
+  <p>In Ionic =&gt; Components | WebView | Canvas</p>
+</blockquote>
+
+<blockquote>
+  <p>In Flutter=&gt; Components | Canvas</p>
+</blockquote>
+
+<p>Same thing makes is better from React Native, Flutter does not employ any middle man, all code written in dart is compiled to native code, no interpreter is used at runtime.</p>
+
+<p>Because widgets are packed <em>with</em> the app, your apps will look same <strong>irrespective of android version</strong>.</p>
+<h2 id="a-look-at-the-code">A Look at the code</h2>
+<p>Dart supports async/await!<img class="emoji" title=":heart_eyes:" alt=":heart_eyes:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f60d.png" height="20" width="20"></p>
+
+<p>Sending HTTP requests:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//Me: I don't want to use types.</span>
+<span class="c1">//Dart: Here you go...</span>
+
+<span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpClient</span><span class="p">();</span>  
+<span class="kd">var</span> <span class="nx">req</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getUrl</span><span class="p">(</span><span class="nx">Uri</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">url</span><span class="p">));</span>
+<span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">req</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">body</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">UTF8</span><span class="p">.</span><span class="nx">decoder</span><span class="p">).</span><span class="nx">join</span><span class="p">();</span>
+<span class="c1">//OR even easier with http library</span>
+<span class="kd">var</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">http</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+<span class="c1">//Body: response.body, Statuscode: response.statusCode ...</span>
+
+<span class="c1">//Promises are also supported</span>
+<span class="nx">http</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">url</span><span class="p">).</span><span class="nx">then</span><span class="p">((</span><span class="nx">response</span><span class="p">){</span>
+    <span class="c1">//response.body</span>
+<span class="p">})</span>
+<span class="c1">//Parse JSON</span>
+<span class="kd">var</span> <span class="nx">json_data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">decode</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span> 
+</code></pre></div></div>
+<p>Lets have a look at code for a screen with appbar</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyApp</span> <span class="kd">extends</span> <span class="n">StatelessWidget</span> <span class="o">{</span>
+  <span class="nd">@override</span>
+  <span class="n">Widget</span> <span class="nf">build</span><span class="o">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">Scaffold</span><span class="o">(</span>
+      <span class="nl">appBar:</span> <span class="k">new</span> <span class="n">AppBar</span><span class="o">(</span>
+        <span class="nl">title:</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"My App"</span><span class="o">),</span>
+      <span class="o">),</span>
+      <span class="nl">body:</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"hello world"</span><span class="o">),</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>That’s It!</p>
+
+<p>Let’s take a look at a Stateful Widget:</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">MyApp</span> <span class="kd">extends</span> <span class="n">State</span><span class="o">&lt;</span><span class="n">ChatScreen</span><span class="o">&gt;</span> <span class="o">{</span>
+  <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;</span> <span class="n">_messages</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">Text</span><span class="o">&gt;[];</span>
+  <span class="nd">@override</span>
+  <span class="n">Widget</span> <span class="nf">build</span><span class="o">(</span><span class="n">BuildContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">Scaffold</span><span class="o">(</span>
+      <span class="nl">appBar:</span> <span class="k">new</span> <span class="n">AppBar</span><span class="o">(</span>
+        <span class="nl">title:</span> <span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"My App"</span><span class="o">),</span>
+        <span class="nl">actions:</span> <span class="o">&lt;</span><span class="n">Widget</span><span class="o">&gt;[</span>
+          <span class="k">new</span> <span class="nf">IconButton</span><span class="o">(</span>
+            <span class="nl">icon:</span> <span class="k">new</span> <span class="n">Icon</span><span class="o">(</span><span class="n">Icons</span><span class="o">.</span><span class="na">add</span><span class="o">),</span>
+            <span class="nl">onPressed:</span> <span class="o">()</span> <span class="o">{</span>
+              <span class="n">setState</span><span class="o">(()</span> <span class="o">{</span>
+                <span class="n">_messages</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">Text</span><span class="o">(</span><span class="s">"Hello"</span><span class="o">));</span>
+              <span class="o">});</span>
+            <span class="o">},</span>
+          <span class="o">)</span>
+        <span class="o">],</span>
+      <span class="o">),</span>
+      <span class="nl">body:</span> <span class="k">new</span> <span class="n">ListView</span><span class="o">.</span><span class="na">builder</span><span class="o">(</span>
+        <span class="nl">itemBuilder:</span> <span class="o">(</span><span class="n">_</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="n">_messages</span><span class="o">[</span><span class="n">i</span><span class="o">],</span>
+        <span class="nl">itemCount:</span> <span class="n">_messages</span><span class="o">.</span><span class="na">length</span><span class="o">,</span>
+      <span class="o">),</span>
+    <span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Quite Readable, isn’t it? On clicking the add button in appbar, a new text,”Hello” will be added to list.</p>
+
+<p>As you can see, the code pattern is very similar to React Native except the JSX part.</p>
+<h2 id="development-workflow">Development Workflow</h2>
+<p>Developing my first little app with flutter went seamlessly. Flutter has great integration with my favourite code editor, <a href="https://code.visualstudio.com">Visual Studio Code</a> using <a href="https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code">Dart Code</a>. Completion and IntelliSense work great.</p>
+
+<p>Flutter has great feature called “Hot reload”<img class="emoji" title=":zap:" alt=":zap:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/26a1.png" height="20" width="20"> which reloads code instantly in device/emulator.</p>
+
+  </div>
+
+  
+    <div class="post-comments" itemprop="comment">
+      <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a9d439f0d592a0013178cb5&amp;product=inline-share-buttons"></script>
+
+<div class="sharethis-inline-share-buttons"></div>
+<hr>
+<h1>Comments</h1>
+<div id="disqus_thread"></div>
+<script>
+
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function () { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mrigank-blog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+<hr>
+<!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+<form action="https://github.us12.list-manage.com/subscribe/post?u=07c129720de6d2eda36bd49e0&amp;id=fbbbefd499" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	<label for="mce-EMAIL">Subscribe to our mailing list</label>
+	<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_07c129720de6d2eda36bd49e0_fbbbefd499" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+
+<!--End mc_embed_signup-->
+    </div>
+  
+
+</article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+© Mrigank Krishan - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://mrigank11.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

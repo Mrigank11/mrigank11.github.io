@@ -1,3 +1,421 @@
----
-layout: feed
----
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <generator uri="http://jekyllrb.com" version="3.7.3">Jekyll</generator>
+  
+  
+  <link href="https://mrigank11.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://mrigank11.github.io/" rel="alternate" type="text/html" />
+  <updated>2018-03-11T07:14:14+00:00</updated>
+  <id>https://mrigank11.github.io//</id>
+
+  
+    <title type="html">Mrigank’s Blog</title>
+  
+
+  
+    <subtitle>Just another tech blog full of random exciting stuff;</subtitle>
+  
+
+  
+    <author>
+        <name>Mrigank Krishan</name>
+      
+      
+    </author>
+  
+
+  
+  
+    <entry>
+      
+      <title type="html">Flutter: The master of all</title>
+      
+      <link href="https://mrigank11.github.io/2018/03/flutter-the-future/" rel="alternate" type="text/html" title="Flutter: The master of all" />
+      <published>2018-03-08T18:41:00+00:00</published>
+      <updated>2018-03-08T18:41:00+00:00</updated>
+      <id>https://mrigank11.github.io/2018/03/flutter-the-future</id>
+      <content type="html" xml:base="https://mrigank11.github.io/2018/03/flutter-the-future/">&lt;p&gt;Today, I explored &lt;strong&gt;Flutter&lt;/strong&gt;, a SDK by Google for cross-platform mobile app development(android and ios).&lt;/p&gt;
+
+&lt;h2 id=&quot;about-flutter&quot;&gt;About Flutter&lt;/h2&gt;
+
+&lt;p&gt;Flutter is an amazing product. Its like hybrid apps reborn!:thumbsup:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;the simplicity of Ionic, reactivity of React and performance of native, you can find all at one place.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Flutter uses &lt;code class=&quot;highlighter-rouge&quot;&gt;dart&lt;/code&gt; as its primary language which again is a great choice. I was able to get started with it in minutes. I found its syntax very similar to Typescript. It works with types only if you want to. Dart is much cooler than javascript but performs remarkably well.&lt;/p&gt;
+
+&lt;p&gt;The interesting thing about flutter is that is has created its own UI elements, but unlike &lt;code class=&quot;highlighter-rouge&quot;&gt;Ionic&lt;/code&gt;, whose components are built on top of web technologies, flutter talks directly to the canvas.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;In Ionic =&amp;gt; Components | WebView | Canvas&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;In Flutter=&amp;gt; Components | Canvas&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Same thing makes is better from React Native, Flutter does not employ any middle man, all code written in dart is compiled to native code, no interpreter is used at runtime.&lt;/p&gt;
+
+&lt;p&gt;Because widgets are packed &lt;em&gt;with&lt;/em&gt; the app, your apps will look same &lt;strong&gt;irrespective of android version&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;a-look-at-the-code&quot;&gt;A Look at the code&lt;/h2&gt;
+&lt;p&gt;Dart supports async/await!:heart_eyes:&lt;/p&gt;
+
+&lt;p&gt;Sending HTTP requests:&lt;/p&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;//Me: I don't want to use types.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Dart: Here you go...&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HttpClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;  
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Uri&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;transform&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UTF8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;decoder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//OR even easier with http library&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Body: response.body, Statuscode: response.statusCode ...&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//Promises are also supported&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//response.body&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//Parse JSON&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;json_data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Lets have a look at code for a screen with appbar&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MyApp&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StatelessWidget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@override&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BuildContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Scaffold&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;nl&quot;&gt;appBar:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AppBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;title:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;My App&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+      &lt;span class=&quot;nl&quot;&gt;body:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hello world&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;That’s It!&lt;/p&gt;
+
+&lt;p&gt;Let’s take a look at a Stateful Widget:&lt;/p&gt;
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MyApp&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;State&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ChatScreen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_messages&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;[];&lt;/span&gt;
+  &lt;span class=&quot;nd&quot;&gt;@override&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BuildContext&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Scaffold&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+      &lt;span class=&quot;nl&quot;&gt;appBar:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AppBar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;title:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;My App&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;actions:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Widget&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;[&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;IconButton&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;icon:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Icon&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Icons&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;nl&quot;&gt;onPressed:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+              &lt;span class=&quot;n&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;n&quot;&gt;_messages&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+              &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;},&lt;/span&gt;
+          &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;],&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+      &lt;span class=&quot;nl&quot;&gt;body:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ListView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;itemBuilder:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_messages&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;itemCount:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_messages&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Quite Readable, isn’t it? On clicking the add button in appbar, a new text,”Hello” will be added to list.&lt;/p&gt;
+
+&lt;p&gt;As you can see, the code pattern is very similar to React Native except the JSX part.&lt;/p&gt;
+&lt;h2 id=&quot;development-workflow&quot;&gt;Development Workflow&lt;/h2&gt;
+&lt;p&gt;Developing my first little app with flutter went seamlessly. Flutter has great integration with my favourite code editor, &lt;a href=&quot;https://code.visualstudio.com&quot;&gt;Visual Studio Code&lt;/a&gt; using &lt;a href=&quot;https://marketplace.visualstudio.com/items?itemName=Dart-Code.dart-code&quot;&gt;Dart Code&lt;/a&gt;. Completion and IntelliSense work great.&lt;/p&gt;
+
+&lt;p&gt;Flutter has great feature called “Hot reload”:zap: which reloads code instantly in device/emulator.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Mrigank Krishan</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="android" />
+      
+
+      
+        <category term="flutter" />
+      
+        <category term="dart" />
+      
+
+      
+        <summary type="html">Today, I explored Flutter, a SDK by Google for cross-platform mobile app development(android and ios).</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Writing your first ZSH autocompletion function</title>
+      
+      <link href="https://mrigank11.github.io/2018/03/zsh-auto-completion/" rel="alternate" type="text/html" title="Writing your first ZSH autocompletion function" />
+      <published>2018-03-05T10:51:00+00:00</published>
+      <updated>2018-03-05T10:51:00+00:00</updated>
+      <id>https://mrigank11.github.io/2018/03/zsh-auto-completion</id>
+      <content type="html" xml:base="https://mrigank11.github.io/2018/03/zsh-auto-completion/">&lt;p&gt;In this post, I’ll guide you in writing few, very basic Zsh autocompletion functions. Everything will be used at its minimal level.&lt;/p&gt;
+
+&lt;p&gt;I’m assuming that you’ve a basic knowledge of &lt;strong&gt;bash&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;You need activate completion system first if you’re not using something like &lt;code class=&quot;highlighter-rouge&quot;&gt;oh-my-zsh&lt;/code&gt;. Just run(or add to &lt;code class=&quot;highlighter-rouge&quot;&gt;.zshrc&lt;/code&gt;):&lt;/p&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;autoload -U compinit
+compinit
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Let’s say our program is called &lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here’s what will happen:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;You write a completion function. It usually starts with &lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt;(underscore) :
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;_hello&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;#You write your code here&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Bind your function to a command
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;compdef _hello hello
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Whenever&lt;/strong&gt; you press &amp;lt;Tab&amp;gt; after &lt;code class=&quot;highlighter-rouge&quot;&gt;hello&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;_hello&lt;/code&gt; will be called.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Whenever you want to throw out possible completions, you’ll use one of the following utility functions(in this post):&lt;/p&gt;
+&lt;h3 id=&quot;compadd&quot;&gt;compadd&lt;/h3&gt;
+&lt;p&gt;You want:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hello &amp;lt;Tab&amp;gt;
+    cmd1    cmd2    cmd3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You’ll write:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;comdadd cmd1 cmd2 cmd3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;_describe&quot;&gt;_describe&lt;/h3&gt;
+&lt;p&gt;You want:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hello &amp;lt;Tab&amp;gt;
+cmd1    &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  description1
+cmd2    &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  description2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;You’ll write:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;_describe &lt;span class=&quot;s1&quot;&gt;'command'&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;('cmd1:description1' 'cmd2:description2')&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In both of above commands, we didn’t consider which argument no. it is, means even &lt;code class=&quot;highlighter-rouge&quot;&gt;hello cmd1 &amp;lt;Tab&amp;gt;&lt;/code&gt; will give same output. Next command will solve this problem.&lt;/p&gt;
+
+&lt;h3 id=&quot;_arguments&quot;&gt;_arguments&lt;/h3&gt;
+&lt;p&gt;Now this is a powerful one. You can control multiple arguments.&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;By multiple arguments I mean &lt;code class=&quot;highlighter-rouge&quot;&gt;hello arg1 arg2&lt;/code&gt; not &lt;code class=&quot;highlighter-rouge&quot;&gt;hello arg1|arg2&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Here’s the basic syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;_arguments &amp;lt;something&amp;gt; &amp;lt;something&amp;gt; ...&lt;/code&gt; where &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;something&amp;gt;&lt;/code&gt; can either be:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;'-o[description]'&lt;/code&gt; for an &lt;em&gt;option&lt;/em&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;'&amp;lt;argument number&amp;gt;:&amp;lt;message&amp;gt;:&amp;lt;what to do&amp;gt;'&lt;/code&gt; for an &lt;em&gt;argument&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;First one is self-explanatory, whenever called it’ll give&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hello &amp;lt;Tab&amp;gt;
+&lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt;  &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;  description
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;For the second one:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;argument number&amp;gt;&lt;/code&gt; is self-explanatory&lt;/li&gt;
+  &lt;li&gt;I’ll leave &lt;code class=&quot;highlighter-rouge&quot;&gt;message&lt;/code&gt; empty to demonstrate a minimal example.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;what to do&amp;gt;&lt;/code&gt; can be quite a few things, we’ll discuss only two:
+    &lt;ol&gt;
+      &lt;li&gt;List of arguments possible at given &lt;code class=&quot;highlighter-rouge&quot;&gt;argument number&lt;/code&gt;. For example, if two arguments(&lt;code class=&quot;highlighter-rouge&quot;&gt;world&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;universe&lt;/code&gt;) are possible at argument one(&lt;code class=&quot;highlighter-rouge&quot;&gt;hello world|universe&lt;/code&gt;), we can write:
+        &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;_arguments &lt;span class=&quot;s1&quot;&gt;'1: :(world universe)'&lt;/span&gt; &amp;lt;something&amp;gt; ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Set variable &lt;code class=&quot;highlighter-rouge&quot;&gt;state&lt;/code&gt; to an identifier. For example, if we want to call another function at argument no. 2, we can write:
+        &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;state
+_arguments &lt;span class=&quot;s1&quot;&gt;'2: :-&amp;gt;identifier'&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$state&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in
+  &lt;/span&gt;identifier&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;c&quot;&gt;#do some special work when we want completion for 2nd argument&lt;/span&gt;
+  ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That might be confusing, lets sum up &lt;code class=&quot;highlighter-rouge&quot;&gt;_arguments&lt;/code&gt; by an example:&lt;/p&gt;
+
+&lt;p&gt;Lets say, our program has possible args like:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hello &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt;|head] &amp;lt;file at /var/log&amp;gt; one|two
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Its completion function can be:&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;_hello&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;state 
+    _arguments &lt;span class=&quot;s1&quot;&gt;'1: :(cat head)'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2: :-&amp;gt;log'&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'3: :-&amp;gt;cache'&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$state&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in
+        &lt;/span&gt;log&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            _describe &lt;span class=&quot;s1&quot;&gt;'command'&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;)&quot;&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;#this is for demonstration purpose only, you'll use _files utility to list a directories&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+        cache&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            compadd one two &lt;span class=&quot;c&quot;&gt;#this could be done above also, in _arguments, you know how :)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;what-next&quot;&gt;What Next?&lt;/h2&gt;
+&lt;p&gt;I hope you were able to successfully write your first autocompletion function. I recommed to visit:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://mads-hartmann.com/2017/08/06/writing-zsh-completion-scripts.html&quot;&gt;Mads’ Blog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/zsh-users/zsh-completions/blob/master/zsh-completions-howto.org&quot;&gt;Zsh Autocompletions Howto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Mrigank Krishan</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="linux" />
+      
+
+      
+        <category term="zsh" />
+      
+        <category term="scripting" />
+      
+
+      
+        <summary type="html">In this post, I’ll guide you in writing few, very basic Zsh autocompletion functions. Everything will be used at its minimal level.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+  
+    <entry>
+      
+      <title type="html">Capturing network requests on Android</title>
+      
+      <link href="https://mrigank11.github.io/2018/03/capturing-network-requests-on-android/" rel="alternate" type="text/html" title="Capturing network requests on Android" />
+      <published>2018-03-03T08:17:00+00:00</published>
+      <updated>2018-03-03T08:17:00+00:00</updated>
+      <id>https://mrigank11.github.io/2018/03/capturing-network-requests-on-android</id>
+      <content type="html" xml:base="https://mrigank11.github.io/2018/03/capturing-network-requests-on-android/">&lt;p&gt;In this post, I will &lt;strong&gt;explore&lt;/strong&gt; different ways to capture network requests from android device. I will go from “using simple proxy” to patching APK file.&lt;/p&gt;
+
+&lt;p&gt;Here is map of this post:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#using-proxy&quot;&gt;Using Proxy&lt;/a&gt;: Obvious way, works most of the time(HTTP only)&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#patch-apk-to-use-http&quot;&gt;Patch APK to use HTTP&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#adding-custom-ca&quot;&gt;Adding custom CA&lt;/a&gt;: capture HTTPS requests(Requires root).&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#patch-apk-to-disable-certificate-pinning&quot;&gt;Patch APK to disable certificate Pinning&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;using-proxy&quot;&gt;Using proxy&lt;/h2&gt;
+&lt;p&gt;The first and most obvious method is to use proxy to redirect all requests to a proxy server.
+Following are some tools to do the same:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;h4 id=&quot;burp-suite---community-edition&quot;&gt;&lt;a href=&quot;https://portswigger.net/burp&quot;&gt;Burp Suite - Community Edition&lt;/a&gt;&lt;/h4&gt;
+    &lt;p&gt;It is a tool written in java developed by PortSwigger especially for network penetration testing. You should use it to do simple and quick capturing as it provides a gui. Its a great tool for beginners.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;h4 id=&quot;mitmproxy&quot;&gt;&lt;a href=&quot;https://mitmproxy.org/&quot;&gt;MitmProxy&lt;/a&gt;&lt;/h4&gt;
+    &lt;p&gt;This is an opensource command line utility for pentesting. It is more powerful than BurpSuite. It provides a python module for more conrol over proxy. Once you learn it, workflow will be much faster as compared to BurpSuite.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;At this point you should be able to intercept HTTP request successfully, but for capturing HTTPs requests you must add your custom CA to device(I’ll add a post about HTTPs soon).&lt;/p&gt;
+
+&lt;p&gt;But lets first consider the case when the target server does not automatically redirect to
+HTTP.&lt;/p&gt;
+
+&lt;h2 id=&quot;patch-apk-to-use-http&quot;&gt;Patch APK to use HTTP&lt;/h2&gt;
+&lt;p&gt;First decompile the apk using APKTool.&lt;/p&gt;
+
+&lt;p&gt;In most cases, &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; will give you location of file containing site host in decompiled APK. It could be in &lt;code class=&quot;highlighter-rouge&quot;&gt;strings.xml&lt;/code&gt; or in some &lt;code class=&quot;highlighter-rouge&quot;&gt;.smali&lt;/code&gt; files.&lt;/p&gt;
+
+&lt;p&gt;Once the file is found, simply replace https with http. Then you can easily use burpsuite or mitmproxy to intercept requests.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Even if website redirects to https automatically, you can create a simple http server to server as a proxy between your device and host.&lt;/p&gt;
+
+&lt;h2 id=&quot;adding-custom-ca&quot;&gt;Adding custom CA&lt;/h2&gt;
+&lt;p&gt;If you &lt;strong&gt;must&lt;/strong&gt; capture HTTPs requests, then you must add your custom CA cert. to device’s trusted store.&lt;/p&gt;
+
+&lt;p&gt;If if your android version is below &lt;code class=&quot;highlighter-rouge&quot;&gt;Nougat&lt;/code&gt;, you can simply download cert to device and install it as you install an app.&lt;/p&gt;
+
+&lt;p&gt;But if that’s not the case, you’ll need to go through a long process to add custom CA which involves &lt;strong&gt;rooting&lt;/strong&gt; you device. If you’re ok with it go ahead and visit &lt;a href=&quot;https://blog.jeroenhd.nl/article/android-7-nougat-and-certificate-authorities&quot;&gt;this blog.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Even after adding custom CA, you might not be able to intercept network requests. If that’s the case then there is a high probability than the target app is using &lt;a href=&quot;https://security.stackexchange.com/questions/29988/what-is-certificate-pinning&quot;&gt;certificate pinning&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;patch-apk-to-disable-certificate-pinning&quot;&gt;Patch APK to disable certificate pinning&lt;/h2&gt;
+&lt;p&gt;In most of the cases apps use &lt;code class=&quot;highlighter-rouge&quot;&gt;okhttp&lt;/code&gt; library to make http requests.&lt;/p&gt;
+
+&lt;p&gt;Try to search for this in decompiled app source(&lt;code class=&quot;highlighter-rouge&quot;&gt;grep -r okhttp .&lt;/code&gt;). 
+If found remove search for calls to &lt;code class=&quot;highlighter-rouge&quot;&gt;setCertificatePinner&lt;/code&gt; method in decompiled smali(s) and remove that line.&lt;/p&gt;
+
+&lt;p&gt;Even if its not &lt;code class=&quot;highlighter-rouge&quot;&gt;okhttp&lt;/code&gt; you can search out the method for library the app is using and remove relevant function call.&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      
+        <author>
+            <name>Mrigank Krishan</name>
+          
+          
+        </author>
+      
+
+      
+        <category term="networking" />
+      
+
+      
+        <category term="android" />
+      
+        <category term="hacking" />
+      
+
+      
+        <summary type="html">In this post, I will explore different ways to capture network requests from android device. I will go from “using simple proxy” to patching APK file.</summary>
+      
+
+      
+      
+    </entry>
+  
+  
+</feed>

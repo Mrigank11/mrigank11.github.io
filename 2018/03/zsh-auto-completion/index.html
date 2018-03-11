@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+
+  document.getElementsByTagName("html")[0].classList.add("wf-loading")
+</script>
+<style>
+.wf-loading{
+  display: none;
+}
+</style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Writing your first ZSH autocompletion function</title>
+  <meta name="description" content="In this post, I’ll guide you in writing few, very basic Zsh autocompletion functions. Everything will be used at its minimal level.">
+  
+    
+    <meta name="keywords" content="zsh, scription, linux, bash, autocompletion, linux">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://mrigank11.github.io/2018/03/zsh-auto-completion/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Mrigank&#39;s Blog" href="https://mrigank11.github.io/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="mrigankkrishan">
+  <meta name="twitter:title" content="Writing your first ZSH autocompletion function">
+  <meta name="twitter:description" content="In this post, I’ll guide you in writing few, very basic Zsh autocompletion functions. Everything will be used at its minimal level.">
+  
+    <meta name="twitter:creator" content="mrigankkrishan">
+  
+  
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-68898819-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+</head>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Mrigank&#39;s Blog</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="https://github.com/Mrigank11">GitHub</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Writing your first ZSH autocompletion function</h1>
+    
+    <p class="post-meta"><time datetime="2018-03-05T10:51:00+00:00" itemprop="datePublished">Mar 5, 2018</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/linux/">linux</a>
+      
+    
+      
+    
+  
+
+
+ •
+  
+    
+    
+      
+    
+      
+    
+      
+        <a href="/tags/zsh/">zsh</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/tags/scripting/">scripting</a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In this post, I’ll guide you in writing few, very basic Zsh autocompletion functions. Everything will be used at its minimal level.</p>
+
+<p>I’m assuming that you’ve a basic knowledge of <strong>bash</strong>.</p>
+
+<blockquote>
+  <p>You need activate completion system first if you’re not using something like <code class="highlighter-rouge">oh-my-zsh</code>. Just run(or add to <code class="highlighter-rouge">.zshrc</code>):</p>
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>autoload -U compinit
+compinit
+</code></pre></div>  </div>
+</blockquote>
+
+<p>Let’s say our program is called <code class="highlighter-rouge">hello</code>.</p>
+
+<p>Here’s what will happen:</p>
+<ul>
+  <li>You write a completion function. It usually starts with <code class="highlighter-rouge">_</code>(underscore) :
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>_hello<span class="o">(){</span>
+  <span class="c">#You write your code here</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Bind your function to a command
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>compdef _hello hello
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Whenever</strong> you press &lt;Tab&gt; after <code class="highlighter-rouge">hello</code>, <code class="highlighter-rouge">_hello</code> will be called.</li>
+</ul>
+
+<p>Whenever you want to throw out possible completions, you’ll use one of the following utility functions(in this post):</p>
+<h3 id="compadd">compadd</h3>
+<p>You want:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hello &lt;Tab&gt;
+    cmd1    cmd2    cmd3
+</code></pre></div></div>
+<p>You’ll write:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>comdadd cmd1 cmd2 cmd3
+</code></pre></div></div>
+<h3 id="_describe">_describe</h3>
+<p>You want:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hello &lt;Tab&gt;
+cmd1    <span class="nt">--</span>  description1
+cmd2    <span class="nt">--</span>  description2
+</code></pre></div></div>
+<p>You’ll write:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_describe <span class="s1">'command'</span> <span class="s2">"('cmd1:description1' 'cmd2:description2')"</span>
+</code></pre></div></div>
+<p><strong>Note</strong>: In both of above commands, we didn’t consider which argument no. it is, means even <code class="highlighter-rouge">hello cmd1 &lt;Tab&gt;</code> will give same output. Next command will solve this problem.</p>
+
+<h3 id="_arguments">_arguments</h3>
+<p>Now this is a powerful one. You can control multiple arguments.</p>
+<blockquote>
+  <p>By multiple arguments I mean <code class="highlighter-rouge">hello arg1 arg2</code> not <code class="highlighter-rouge">hello arg1|arg2</code></p>
+</blockquote>
+
+<p>Here’s the basic syntax: <code class="highlighter-rouge">_arguments &lt;something&gt; &lt;something&gt; ...</code> where <code class="highlighter-rouge">&lt;something&gt;</code> can either be:</p>
+<ul>
+  <li><code class="highlighter-rouge">'-o[description]'</code> for an <em>option</em></li>
+  <li><code class="highlighter-rouge">'&lt;argument number&gt;:&lt;message&gt;:&lt;what to do&gt;'</code> for an <em>argument</em></li>
+</ul>
+
+<p>First one is self-explanatory, whenever called it’ll give</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hello &lt;Tab&gt;
+<span class="nt">-o</span>  <span class="nt">--</span>  description
+</code></pre></div></div>
+
+<p>For the second one:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;argument number&gt;</code> is self-explanatory</li>
+  <li>I’ll leave <code class="highlighter-rouge">message</code> empty to demonstrate a minimal example.</li>
+  <li><code class="highlighter-rouge">&lt;what to do&gt;</code> can be quite a few things, we’ll discuss only two:
+    <ol>
+      <li>List of arguments possible at given <code class="highlighter-rouge">argument number</code>. For example, if two arguments(<code class="highlighter-rouge">world</code> and <code class="highlighter-rouge">universe</code>) are possible at argument one(<code class="highlighter-rouge">hello world|universe</code>), we can write:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_arguments <span class="s1">'1: :(world universe)'</span> &lt;something&gt; ...
+</code></pre></div>        </div>
+      </li>
+      <li>Set variable <code class="highlighter-rouge">state</code> to an identifier. For example, if we want to call another function at argument no. 2, we can write:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">local </span>state
+_arguments <span class="s1">'2: :-&gt;identifier'</span>
+<span class="k">case</span> <span class="nv">$state</span> <span class="k">in
+  </span>identifier<span class="p">)</span>
+ <span class="c">#do some special work when we want completion for 2nd argument</span>
+  ...
+</code></pre></div>        </div>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<p>That might be confusing, lets sum up <code class="highlighter-rouge">_arguments</code> by an example:</p>
+
+<p>Lets say, our program has possible args like:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hello <span class="o">[</span><span class="nb">cat</span>|head] &lt;file at /var/log&gt; one|two
+</code></pre></div></div>
+<p>Its completion function can be:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>_hello<span class="o">(){</span>
+    <span class="nb">local </span>state 
+    _arguments <span class="s1">'1: :(cat head)'</span> <span class="s1">'2: :-&gt;log'</span> <span class="s1">'3: :-&gt;cache'</span>
+
+    <span class="k">case</span> <span class="nv">$state</span> <span class="k">in
+        </span>log<span class="p">)</span>
+            _describe <span class="s1">'command'</span> <span class="s2">"(</span><span class="k">$(</span><span class="nb">ls</span> <span class="nv">$1</span><span class="k">)</span><span class="s2">)"</span>    <span class="c">#this is for demonstration purpose only, you'll use _files utility to list a directories</span>
+            <span class="p">;;</span>
+        cache<span class="p">)</span>
+            compadd one two <span class="c">#this could be done above also, in _arguments, you know how :)</span>
+            <span class="p">;;</span>
+    <span class="k">esac</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="what-next">What Next?</h2>
+<p>I hope you were able to successfully write your first autocompletion function. I recommed to visit:</p>
+<ul>
+  <li><a href="http://mads-hartmann.com/2017/08/06/writing-zsh-completion-scripts.html">Mads’ Blog</a></li>
+  <li><a href="https://github.com/zsh-users/zsh-completions/blob/master/zsh-completions-howto.org">Zsh Autocompletions Howto</a></li>
+</ul>
+
+  </div>
+
+  
+    <div class="post-comments" itemprop="comment">
+      <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a9d439f0d592a0013178cb5&product=inline-share-buttons"></script>
+
+<div class="sharethis-inline-share-buttons"></div>
+<hr />
+<h1>Comments</h1>
+<div id="disqus_thread"></div>
+<script>
+
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function () { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mrigank-blog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+<hr>
+<!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+<form action="https://github.us12.list-manage.com/subscribe/post?u=07c129720de6d2eda36bd49e0&amp;id=fbbbefd499" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	<label for="mce-EMAIL">Subscribe to our mailing list</label>
+	<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_07c129720de6d2eda36bd49e0_fbbbefd499" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+
+<!--End mc_embed_signup-->
+    </div>
+  
+
+</article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Mrigank Krishan - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://mrigank11.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

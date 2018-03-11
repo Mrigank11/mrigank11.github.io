@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: { families: [ 'Bitter:400,700,400italic:latin' ] }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+
+  document.getElementsByTagName("html")[0].classList.add("wf-loading")
+</script>
+<style>
+.wf-loading{
+  display: none;
+}
+</style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  
+  
+  <title>Capturing network requests on Android</title>
+  <meta name="description" content="In this post, I will explore different ways to capture network requests from android device. I will go from “using simple proxy” to patching APK file.">
+  
+    
+    <meta name="keywords" content="android, hacking, proxy, certificate, authority, ca, nougat, apk, burp, mitmproxy">
+  
+
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="canonical" href="https://mrigank11.github.io/2018/03/capturing-network-requests-on-android/">
+  
+  
+  <link rel="alternate" type="application/rss+xml" title="Mrigank&#39;s Blog" href="https://mrigank11.github.io/feed.xml">
+
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="mrigankkrishan">
+  <meta name="twitter:title" content="Capturing network requests on Android">
+  <meta name="twitter:description" content="In this post, I will explore different ways to capture network requests from android device. I will go from “using simple proxy” to patching APK file.">
+  
+    <meta name="twitter:creator" content="mrigankkrishan">
+  
+  
+
+  
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-68898819-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+</head>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Mrigank&#39;s Blog</a>
+
+    <nav class="site-nav">
+      
+        
+        <a class="page-link" href="/about/">About</a>
+      
+        
+        <a class="page-link" href="/archives/">Archives</a>
+      
+        
+        <a class="page-link" href="https://github.com/Mrigank11">GitHub</a>
+      
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+      <h1 class="post-title" itemprop="name headline">Capturing network requests on Android</h1>
+    
+    <p class="post-meta"><time datetime="2018-03-03T08:17:00+00:00" itemprop="datePublished">Mar 3, 2018</time> •
+  
+    
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+        <a href="/categories/networking/">networking</a>
+      
+    
+      
+    
+      
+    
+  
+
+
+ •
+  
+    
+    
+      
+        <a href="/tags/android/">android</a>,
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+    
+    
+      
+    
+      
+        <a href="/tags/hacking/">hacking</a>
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  
+
+</p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>In this post, I will <strong>explore</strong> different ways to capture network requests from android device. I will go from “using simple proxy” to patching APK file.</p>
+
+<p>Here is map of this post:</p>
+<ul>
+  <li><a href="#using-proxy">Using Proxy</a>: Obvious way, works most of the time(HTTP only)</li>
+  <li><a href="#patch-apk-to-use-http">Patch APK to use HTTP</a></li>
+  <li><a href="#adding-custom-ca">Adding custom CA</a>: capture HTTPS requests(Requires root).</li>
+  <li><a href="#patch-apk-to-disable-certificate-pinning">Patch APK to disable certificate Pinning</a></li>
+</ul>
+
+<h2 id="using-proxy">Using proxy</h2>
+<p>The first and most obvious method is to use proxy to redirect all requests to a proxy server.
+Following are some tools to do the same:</p>
+<ul>
+  <li>
+    <h4 id="burp-suite---community-edition"><a href="https://portswigger.net/burp">Burp Suite - Community Edition</a></h4>
+    <p>It is a tool written in java developed by PortSwigger especially for network penetration testing. You should use it to do simple and quick capturing as it provides a gui. Its a great tool for beginners.</p>
+  </li>
+  <li>
+    <h4 id="mitmproxy"><a href="https://mitmproxy.org/">MitmProxy</a></h4>
+    <p>This is an opensource command line utility for pentesting. It is more powerful than BurpSuite. It provides a python module for more conrol over proxy. Once you learn it, workflow will be much faster as compared to BurpSuite.</p>
+  </li>
+</ul>
+
+<p>At this point you should be able to intercept HTTP request successfully, but for capturing HTTPs requests you must add your custom CA to device(I’ll add a post about HTTPs soon).</p>
+
+<p>But lets first consider the case when the target server does not automatically redirect to
+HTTP.</p>
+
+<h2 id="patch-apk-to-use-http">Patch APK to use HTTP</h2>
+<p>First decompile the apk using APKTool.</p>
+
+<p>In most cases, <code class="highlighter-rouge">grep</code> will give you location of file containing site host in decompiled APK. It could be in <code class="highlighter-rouge">strings.xml</code> or in some <code class="highlighter-rouge">.smali</code> files.</p>
+
+<p>Once the file is found, simply replace https with http. Then you can easily use burpsuite or mitmproxy to intercept requests.</p>
+
+<p><strong>Note</strong>: Even if website redirects to https automatically, you can create a simple http server to server as a proxy between your device and host.</p>
+
+<h2 id="adding-custom-ca">Adding custom CA</h2>
+<p>If you <strong>must</strong> capture HTTPs requests, then you must add your custom CA cert. to device’s trusted store.</p>
+
+<p>If if your android version is below <code class="highlighter-rouge">Nougat</code>, you can simply download cert to device and install it as you install an app.</p>
+
+<p>But if that’s not the case, you’ll need to go through a long process to add custom CA which involves <strong>rooting</strong> you device. If you’re ok with it go ahead and visit <a href="https://blog.jeroenhd.nl/article/android-7-nougat-and-certificate-authorities">this blog.</a></p>
+
+<p>Even after adding custom CA, you might not be able to intercept network requests. If that’s the case then there is a high probability than the target app is using <a href="https://security.stackexchange.com/questions/29988/what-is-certificate-pinning">certificate pinning</a>.</p>
+
+<h2 id="patch-apk-to-disable-certificate-pinning">Patch APK to disable certificate pinning</h2>
+<p>In most of the cases apps use <code class="highlighter-rouge">okhttp</code> library to make http requests.</p>
+
+<p>Try to search for this in decompiled app source(<code class="highlighter-rouge">grep -r okhttp .</code>). 
+If found remove search for calls to <code class="highlighter-rouge">setCertificatePinner</code> method in decompiled smali(s) and remove that line.</p>
+
+<p>Even if its not <code class="highlighter-rouge">okhttp</code> you can search out the method for library the app is using and remove relevant function call.</p>
+
+  </div>
+
+  
+    <div class="post-comments" itemprop="comment">
+      <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a9d439f0d592a0013178cb5&product=inline-share-buttons"></script>
+
+<div class="sharethis-inline-share-buttons"></div>
+<hr />
+<h1>Comments</h1>
+<div id="disqus_thread"></div>
+<script>
+
+    /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function () { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://mrigank-blog.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the
+    <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+
+<hr>
+<!-- Begin MailChimp Signup Form -->
+<link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	#mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:100%;}
+	/* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
+	   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+</style>
+<div id="mc_embed_signup">
+<form action="https://github.us12.list-manage.com/subscribe/post?u=07c129720de6d2eda36bd49e0&amp;id=fbbbefd499" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	<label for="mce-EMAIL">Subscribe to our mailing list</label>
+	<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_07c129720de6d2eda36bd49e0_fbbbefd499" tabindex="-1" value=""></div>
+    <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+    </div>
+</form>
+</div>
+
+<!--End mc_embed_signup-->
+    </div>
+  
+
+</article>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <p>
+      
+
+&copy; Mrigank Krishan - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://mrigank11.github.io/feed.xml">RSS</a>
+
+    </p>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
