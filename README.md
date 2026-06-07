@@ -1,10 +1,14 @@
-# My Blog
-This is the place where I write cool techy things!
+# Mrigank's Blog
 
-## Tech Stack
-- Jekyll
-- Theme: whiteglass
-- Jemoji for emojies
-- MailChimp for subscribe form
-- Google Analytics 
-- Disqus for comments
+My personal blog built with [Astro](https://astro.build/) and [Astro Paper](https://github.com/satnaing/astro-paper).
+
+## Local Development
+
+```bash
+bun install
+bun run dev
+```
+
+## Deployment
+
+Pushes to `main` branch will automatically deploy to GitHub Pages.
