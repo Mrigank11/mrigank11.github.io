@@ -11,7 +11,7 @@ export interface Props {}
   <h2 class="text-2xl font-semibold tracking-wide mb-4">Comments</h2>
   <div id="disqus_thread"></div>
   <script is:inline>
-      var disqus_config = function () {
+      window.disqus_config = function () {
         this.page.url = window.location.href;  // Replace PAGE_URL with your page's canonical URL variable
         this.page.identifier = window.location.pathname; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
       };
