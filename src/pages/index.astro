@@ -33,35 +33,60 @@ const homePath = getRelativeLocaleUrl(locale, "");
     data-home-path={homePath}
     class="app-layout"
   >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Welcome to my blog!
-      </h1>
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
+    <section id="hero" class="border-border border-b pt-8 pb-8 flex flex-col gap-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent border border-accent/20 text-xs font-medium tracking-wide">
+          <span class="relative flex h-1.5 w-1.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
+          </span>
+          Lead Tech @ D. E. Shaw India
+        </div>
+        
+        <a
+          target="_blank"
+          href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+          class="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-accent transition-colors py-1 px-2.5 rounded-full border border-border/80 bg-muted/30"
+          aria-label="RSS Feed"
+          title="RSS Feed"
+        >
+          <IconRss
+            width={14}
+            height={14}
+            class="stroke-accent stroke-3 rtl:-rotate-90"
+          />
+          <span>RSS Feed</span>
+        </a>
+      </div>
 
-      <p>
-        I'm Mrigank Krishan, a CSE undergrad at Indian Institute of Technology, Indore.
-        I mostly write about security, web and linux.
-      </p>
+      <div>
+        <h1 class="text-4xl font-bold sm:text-5xl tracking-tight leading-tight my-2">
+          Hi, I'm <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent via-indigo-500 to-purple-500">Mrigank Krishan</span>.
+        </h1>
+        <p class="text-lg text-muted-foreground font-medium mt-1">
+          Systems Architect &middot; Security Enthusiast
+        </p>
+      </div>
+
+      <div class="space-y-4 text-base leading-relaxed text-foreground max-w-2xl mt-2">
+        <p>
+          I design and build high-performance distributed systems, grid orchestration platforms, 
+          and custom container runtimes. Over the past few years, my work has centered on 
+          Kubernetes internals, high-availability cluster schedulers, and integrating LLMs for automated AI workflows.
+        </p>
+        <p>
+          A computer science graduate from the <strong>Indian Institute of Technology, Indore</strong>, 
+          I write here about system engineering, security, web development, and Linux. When I'm not writing code, 
+          I compete in cybersecurity CTFs, formerly winning CSAW India with team ByteBandits.
+        </p>
+      </div>
+
       {
         socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
+          <div class="mt-4 flex flex-wrap items-center gap-2 border-t border-border/50 pt-4">
+            <span class="text-sm font-semibold text-muted-foreground me-2">
+              Connect:
+            </span>
             <Socials />
           </div>
         )
