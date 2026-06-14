@@ -1,0 +1,84 @@
+---
+// Host/VM + Tailscale network diagram for the NixOS homelab post.
+---
+
+<figure class="not-prose my-8 flex flex-col items-center">
+  <div class="flex flex-col items-center">
+    <span
+      class="border-border bg-background text-muted-foreground rounded-full border px-3 py-1 text-xs font-medium tracking-wide uppercase"
+    >
+      Tailscale tailnet
+    </span>
+    <div class="border-border h-4 border-l border-dashed"></div>
+  </div>
+
+  <div
+    class="border-border bg-muted/40 relative w-full max-w-md rounded-xl border p-5 pt-8"
+  >
+    <div class="absolute -top-3 left-4 flex items-center gap-2">
+      <span
+        class="bg-background text-muted-foreground px-2 text-xs font-medium tracking-wide uppercase"
+      >
+        Host — Manjaro
+      </span>
+      <span
+        class="bg-background text-muted-foreground border-border rounded-full border px-2 py-0.5 text-[10px] font-medium"
+      >
+        tailscale
+      </span>
+    </div>
+
+    <div class="flex flex-col items-center">
+      <div class="border-border h-4 border-l border-dashed"></div>
+
+      <div
+        class="border-accent/40 bg-background relative w-full rounded-lg border p-4 pt-7"
+      >
+        <div class="absolute -top-3 left-4 flex items-center gap-2">
+          <span
+            class="bg-background text-accent px-2 text-xs font-medium tracking-wide uppercase"
+          >
+            VM — NixOS
+          </span>
+          <span
+            class="bg-background text-accent border-accent/40 rounded-full border px-2 py-0.5 text-[10px] font-medium"
+          >
+            tailscale
+          </span>
+        </div>
+
+        <ul class="text-foreground grid grid-cols-2 gap-2 text-sm">
+          <li class="border-border rounded-md border px-2 py-1.5 text-center">
+            Immich
+          </li>
+          <li class="border-border rounded-md border px-2 py-1.5 text-center">
+            Caddy
+          </li>
+          <li class="border-border rounded-md border px-2 py-1.5 text-center">
+            Postgres
+          </li>
+          <li class="border-border rounded-md border px-2 py-1.5 text-center">
+            oauth2-proxy
+          </li>
+          <li
+            class="border-border col-span-2 rounded-md border px-2 py-1.5 text-center"
+          >
+            oci-containers (omniroute, mboard, camofox, …)
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="text-muted-foreground mt-3 flex justify-center text-xs">
+      <span class="border-border bg-background rounded-full border px-3 py-1">
+        virtiofs ↔ shared photo library
+      </span>
+    </div>
+  </div>
+
+  <figcaption class="text-muted-foreground mt-3 text-center text-sm">
+    Host and VM both join the same tailnet — everything else declarative
+    lives inside the NixOS VM, with virtiofs bridging the bits that need to
+    stay on disk.
+  </figcaption>
+</figure>

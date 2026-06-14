@@ -20,9 +20,21 @@ function getIdSlug(id: string): string {
   return postId.length > 0 ? String(postId[postId.length - 1]) : id;
 }
 
+function isIndexFile(filePath: string | undefined): boolean {
+  return filePath?.replace(/\.[^/.]+$/, "").split("/").pop() === "index";
+}
+
 function getPostSlugPath(id: string, filePath: string | undefined): string {
   const pathSegments = getPostPathSegments(filePath);
   const slug = getIdSlug(id);
+
+  // For `<post-slug>/index.mdx`, Astro's content loader already strips
+  // the trailing `/index` from the slug, so the containing folder name
+  // (the last path segment) *is* the slug — don't append it again.
+  if (isIndexFile(filePath) && pathSegments.length > 0) {
+    return pathSegments.join("/");
+  }
+
   return pathSegments.length > 0
     ? [...pathSegments, slug].join("/")
     : String(slug);

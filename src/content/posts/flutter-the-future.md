@@ -2,7 +2,7 @@
 author: Mrigank Krishan
 pubDatetime: 2018-03-09T00:11:00+05:30
 title: 'Flutter: The master of all'
-featured: true
+featured: false
 draft: false
 tags:
   - flutter

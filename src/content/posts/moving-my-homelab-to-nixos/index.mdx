@@ -1,0 +1,126 @@
+---
+author: Mrigank Krishan
+pubDatetime: 2026-06-15T12:00:00+05:30
+title: Moving my Homelab to NixOS
+featured: true
+draft: false
+tags:
+  - nixos
+  - homelab
+  - nix
+description: How I went from a pile of docker/podman commands on Manjaro to a fully declarative NixOS VM for my homelab — and the two failed attempts along the way.
+---
+import ArchDiagram from "./ArchDiagram.astro";
+
+## What's in my Homelab?
+
+A quick rundown before I get into the infra story. My homelab currently runs:
+
+- [Immich](https://immich.app/) for photos — Google Photos replacement - because you need a place to put those trip dumps.
+- **Tailscale + Cloudflare Tunnels** for networking — how things connect internally and externally.
+- **oauth2-proxy** for authenticating the services I expose over the internet — enough of a topic on its own that I'll cover it in a separate post
+- [Hermes Agent](https://hermes-agent.nousresearch.com/)
+- ...and a handful of other smaller projects running alongside these
+
+That's the "what". This post is about the "how it's all run" — and how that changed this week.
+
+## Managing Services
+
+For a while, "infra" here just meant a Manjaro box, and a bunch of `docker run`/`podman run` commands. It was good for smaller scale, but as I started to host more services, managing them became difficult. It was a bunch of docker-compose files or commands from my zsh history that I had to scrounge for - where to find configs, what services start with boot etc etc. became an headache - I felt this was the right time to improve this (big believer of *don't optimize early*!).
+
+# Infrastructure-as-code
+
+So I went on the adventure to find the best tool for my set-up. What I wanted was clear:
+- Single place to keep all *recipes* for my services.
+- One place to manage configs and secrets.
+- Reproducibility: if I move to a new box, it should be easy to start my homelab.
+
+Having used Nix at work - I somehow felt it might be the right tool, but I researched anyways.
+
+## First stop - Ansible
+
+Quick research in this area led me to Ansible. Because it was very easy to set-up, I tried it first.
+
+Ansible got me *some* of the way — config was at least versioned — but it still felt like I was describing *steps* to get to a state, not the state itself. Idempotency only goes so far when the underlying thing you're managing is a pile of imperative container commands.
+
+## Nix: take one
+
+I was a bit skeptical to go all-into Nix at-first. I wanted declarative configs for my hosted services, but I also like the flexibility of Manjaro for my day-to-day stuff. Hence, I wanted to keep Manjaro, and have Nix only for my hosted services.
+
+At first, I tried setting up NixOS in **nspawn containers**. The idea was to get NixOS's declarative config without replacing my host OS — run NixOS inside `systemd-nspawn` containers on Manjaro. This turned into a mess of networking and systemd-inside-systemd quirks that weren't worth fighting, and I abandoned it.
+
+> At this point, I was spending more time debugging user-ns issues than actually learning Nix.
+
+## Nix: take two
+
+Then, I thought of trying Nix's home-manager to manage my configs. It actually went a lot further than I expected — I put together a `nix_hm/` setup: a flake, a `home.nix`, and per-service modules, with `systemd.user.services` standing in for my `podman-compose` units and `sops-nix`.
+
+And honestly, most of it mapped really cleanly. `systemd.user.services` was close to a 1:1 swap for my compose units, `home.file` placed config declaratively, secrets were encrypted-at-rest and git-safe.
+
+But a few things didn't fit:
+- **Caddy stayed manual.** It's a system service — home-manager could symlink the config into `/nix/store`, but reloading it needed a separate `sudo systemctl reload caddy`, with no automation.
+
+Every one of these gaps traced back to the same root cause: home-manager is fundamentally **user-scoped**, and the thing I actually wanted — `virtualisation.oci-containers` for managing my podman containers — is a **NixOS module**. It generates *system* systemd units, full stop. No amount of home-manager cleverness gets around that.
+
+So `nix_hm/` wasn't a failure exactly — it got close. But some things still remained manual (all system services basically) so I tried to go all in.
+
+## Nix: take three
+
+This time, I decided to install NixOS in a full VM.
+
+This is the one that worked. Instead of fighting nspawn, I spun up a NixOS VM under libvirt/KVM, on the same Manjaro machine, and moved everything into it as proper NixOS config — flakes, systemd services, secrets via sops-nix, the works. The host stays untouched; the VM is where all the declarative magic happens, with a shared filesystem (virtiofs) for the bits that need to live on the host disk (like the photo library).
+
+Roughly, the setup looks like this:
+
+- **Host**: Manjaro, completely untouched, just running libvirt/KVM.
+- **VM**: full NixOS, static IP on the libvirt NAT network, defined via `flake.nix` + `configuration.nix` + `hardware.nix`.
+- **Networking**: Started a Tailscale instance inside the VM as well. It made my life a lot easier!
+- **Secrets**: `sops-nix` + `age` — the VM's own SSH host key gets converted into an age key, so secrets are encrypted *to the VM itself* (plus my personal key as a recovery copy).
+- **Shared filesystem**: virtiofs passthrough, so the photo library can stay on the host disk while everything else lives in the VM.
+- **Services**: most run via `virtualisation.oci-containers` (podman backend) — basically the same containers as before, just declared in Nix. The handful that benefit from tighter integration (Immich, Caddy, Tailscale, Postgres) are native NixOS modules instead.
+
+<ArchDiagram />
+
+### A sneak peek at what "clean" looks like
+
+The best way to show what I mean by declarative is just... to show it. Here's the import list from my VM's `configuration.nix` — basically a table of contents for my entire homelab:
+
+```nix
+imports = [
+  ./hardware.nix
+  ../../modules/immich.nix
+  ../../modules/caddy.nix
+  ../../modules/tailscale.nix
+  ../../modules/oauth2-proxy.nix
+  ../../modules/postgres.nix
+  ../../modules/containers/default.nix   # omniroute, mboard, netdata, camofox, ...
+];
+```
+
+That's it. Every service I run, one file each, all listed in one place. Want to know how Immich is configured? `modules/immich.nix`. Caddy? `modules/caddy.nix`. No more "where's config for this service, again?"
+
+And here's my favorite bit — `modules/immich.nix`:
+
+```nix
+services.immich = {
+  enable = true;
+  host = "0.0.0.0";
+  mediaLocation = "/srv/immich/library";
+  package = pkgs.immich;
+};
+
+# Let OS user "mrigank" authenticate as postgres role "immich" via peer auth
+services.postgresql.identMap = ''
+  immich-map mrigank immich
+'';
+```
+
+That `identMap` line is solving a real problem — Immich runs as my own user `mrigank`, but its database role is `immich` — **right there in the same file** as the service it's for. No separate "remember to update `pg_hba.conf`" step, no out-of-band SQL script. The database config lives right next to the service that owns it, declared in the same breath as the service itself.
+
+It took a fair bit of setup to get right, but **it's great once it's set up**. One thing I really like, and might end up wanting on my main machine too: every package and service can be upgraded independently, by design. No more "upgrading one thing breaks three other things because they all secretly shared a base image."
+
+## Journey into NixOS
+
+**Learning Nix** was its own adventure — the language takes some getting used to, and the homelab migration doubled as my crash course: flakes, derivations, modules, `sops-nix` for secrets. A lot of "why won't this evaluate" followed by "oh, *that's* why."
+
+**Nix at work** was actually the other direction — I'd already been running into Nix-flavored ideas (reproducible builds, declarative infra) in my day job on distributed systems and container runtimes, and that familiarity made jumping into NixOS for the homelab feel a lot less intimidating than it might have a year ago. Funny how that goes — work nudges the homelab, and now the homelab is teaching me things I'll bring back to work.
