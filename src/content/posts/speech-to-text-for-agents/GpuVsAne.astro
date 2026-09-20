@@ -1,0 +1,49 @@
+---
+import SwissFigure from "../development-at-the-speed-of-thought/SwissFigure.astro";
+---
+
+<SwissFigure
+  height={214}
+  label="Two chip floorplans, one signal, two labels. Left, the Metal GPU is shared: dictation, a local LLM and a big build all use it, so dictation waits. Right, the Neural Engine is dedicated: only dictation runs on it, and on paper the CPU sits idle and the GPU stays free."
+>
+  <text class="k mut" x="24" y="30">one signal · two labels</text>
+  <line class="rule" x1="160" y1="42" x2="160" y2="200"></line>
+
+  <!-- Metal GPU: shared -->
+  <text class="k acc" x="24" y="56">metal gpu</text>
+  <rect class="boxa" x="24" y="64" width="124" height="44" rx="2"></rect>
+  <text class="acc" x="34" y="90" font-size="11" font-weight="700">GPU</text>
+  <text class="mut" x="82" y="90" font-size="9">shared</text>
+  <path class="wire" d="M32,108 V128 H40"></path>
+  <path class="ghost" d="M32,128 V152 H40" fill="none"></path>
+  <path class="ghost" d="M32,152 V176 H40" fill="none"></path>
+  <rect class="boxa" x="40" y="118" width="100" height="20" rx="2"></rect>
+  <text x="48" y="132" font-size="9.5">dictation</text>
+  <rect class="box" x="40" y="142" width="100" height="20" rx="2"></rect>
+  <text x="48" y="156" font-size="9.5">local LLM</text>
+  <rect class="box" x="40" y="166" width="100" height="20" rx="2"></rect>
+  <text x="48" y="180" font-size="9.5">big build</text>
+  <text class="mut" x="24" y="202" font-size="9">dictation waits</text>
+
+  <!-- Neural Engine: dedicated -->
+  <text class="k acc" x="176" y="56">neural engine</text>
+  <rect class="boxa" x="176" y="64" width="124" height="44" rx="2"></rect>
+  <text class="acc" x="186" y="90" font-size="11" font-weight="700">ANE</text>
+  <text class="mut" x="234" y="90" font-size="9">dedicated</text>
+  <path class="wire" d="M184,108 V128 H192"></path>
+  <rect class="boxa" x="192" y="118" width="100" height="20" rx="2"></rect>
+  <text x="200" y="132" font-size="9.5">dictation</text>
+  <rect class="ghost" x="192" y="142" width="100" height="20" rx="2" fill="none"
+  ></rect>
+  <text class="mut" x="200" y="156" font-size="9.5">CPU idle</text>
+  <rect class="ghost" x="192" y="166" width="100" height="20" rx="2" fill="none"
+  ></rect>
+  <text class="mut" x="200" y="180" font-size="9.5">GPU free</text>
+  <text class="mut" x="176" y="202" font-size="9">uncontended, on paper</text>
+
+  <Fragment slot="caption">
+    On the GPU, dictation shares the chip with everything else. On the Neural
+    Engine it gets a chip to itself. That is the case for the Neural Engine, on
+    paper.
+  </Fragment>
+</SwissFigure>

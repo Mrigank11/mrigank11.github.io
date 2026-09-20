@@ -1,0 +1,88 @@
+---
+import SwissFigure from "../development-at-the-speed-of-thought/SwissFigure.astro";
+
+// REVIEW: the row placement of OpenSuperWhisper and VoiceInk ("native") is not
+// in the captain's draft. It comes from the outline board; confirm before
+// publishing. Electron (OpenWhispr), Rust (Handy) and Swift (FluidVoice) are
+// from the draft.
+---
+
+<SwissFigure
+  height={252}
+  label="The five apps on a grid. Columns: Mac only, or Windows, Mac and Linux. Rows: built on Electron, or native. Windows, Mac and Linux plus Electron: OpenWhispr, free. Mac only plus native: OpenSuperWhisper, free; VoiceInk, paid; FluidVoice, free, compared in this post. Windows, Mac and Linux plus native: Handy, free, compared in this post."
+>
+  <text class="k mut" x="24" y="30">where each app lands</text>
+
+  <!-- column heads -->
+  <text class="k mut" x="62" y="52">mac only</text>
+  <text class="k mut" x="176" y="52">win · mac · linux</text>
+
+  <!-- plot frame: two columns (40..168, 168..296), two rows (60..118, 118..218) -->
+  <rect class="box" x="40" y="60" width="256" height="158" rx="1"></rect>
+  <line class="rule" x1="168" y1="60" x2="168" y2="218"></line>
+  <line class="rule" x1="40" y1="118" x2="296" y2="118"></line>
+
+  <!-- row heads, rotated out of the way of the marks -->
+  <text
+    class="k mut"
+    x="24"
+    y="94"
+    transform="rotate(-90 24 94)"
+    text-anchor="middle">electron</text
+  >
+  <text
+    class="k mut"
+    x="24"
+    y="168"
+    transform="rotate(-90 24 168)"
+    text-anchor="middle">native</text
+  >
+
+  <!-- electron row -->
+  <circle class="bar" cx="188" cy="90" r="5"></circle>
+  <text x="200" y="94" font-size="10">OpenWhispr</text>
+
+  <!-- native, mac only -->
+  <circle class="bar" cx="56" cy="140" r="5"></circle>
+  <text x="68" y="144" font-size="10">OpenSuperWhisper</text>
+  <circle
+    cx="56"
+    cy="164"
+    r="4.2"
+    fill="none"
+    stroke="var(--accent)"
+    stroke-width="1.6"></circle>
+  <text x="68" y="168" font-size="10">VoiceInk</text>
+  <text class="mut" x="124" y="168" font-size="9">paid</text>
+  <circle class="ghost" cx="56" cy="192" r="10" fill="none"></circle>
+  <circle class="bar" cx="56" cy="192" r="5"></circle>
+  <text class="acc" x="72" y="196" font-size="10" font-weight="700"
+    >FluidVoice</text
+  >
+
+  <!-- native, cross-platform -->
+  <circle class="ghost" cx="188" cy="168" r="10" fill="none"></circle>
+  <circle class="bar" cx="188" cy="168" r="5"></circle>
+  <text class="acc" x="204" y="172" font-size="10" font-weight="700">Handy</text
+  >
+
+  <!-- legend -->
+  <circle class="bar" cx="30" cy="236" r="3.5"></circle>
+  <text class="mut" x="38" y="239" font-size="9">free</text>
+  <circle
+    cx="76"
+    cy="236"
+    r="3"
+    fill="none"
+    stroke="var(--accent)"
+    stroke-width="1.4"></circle>
+  <text class="mut" x="84" y="239" font-size="9">paid</text>
+  <circle class="ghost" cx="130" cy="236" r="5" fill="none"></circle>
+  <text class="mut" x="140" y="239" font-size="9">the two I compared</text>
+
+  <Fragment slot="caption">
+    Two things separate the five: whether the app runs on more than a Mac, and
+    whether it ships a browser with it. Handy is the only one that gets both
+    right, and FluidVoice is the native Mac counterpart.
+  </Fragment>
+</SwissFigure>

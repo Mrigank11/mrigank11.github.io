@@ -1,0 +1,195 @@
+---
+author: Mrigank Krishan
+pubDatetime: 2026-09-20T12:00:00+05:30
+title: "Speech to text for agents: Handy vs FluidVoice"
+featured: false
+draft: false
+tags:
+  - ai
+  - speech-to-text
+  - macos
+  - rust
+description: Speaking to a coding agent beats typing, and it should run on your own machine. I compared two free local apps, Handy and FluidVoice, and the one on the Apple Neural Engine used about 3.4x the energy.
+---
+import Collapsible from "../development-at-the-speed-of-thought/Collapsible.astro";
+import HyperframesEmbed from "@/components/HyperframesEmbed.astro";
+import FieldGrid from "./FieldGrid.astro";
+import FieldMatrix from "./FieldMatrix.astro";
+import LocalPipeline from "./LocalPipeline.astro";
+import GpuVsAne from "./GpuVsAne.astro";
+import EnergyPerMinute from "./EnergyPerMinute.astro";
+import PowerBreakdown from "./PowerBreakdown.astro";
+
+<HyperframesEmbed
+  src="/posts/speech-to-text-for-agents/animation/index.html"
+  poster="/posts/speech-to-text-for-agents/animation-poster.png"
+  alt="Animated banner: Stop typing. Just talk. A speech bar finishes before a typing bar while an instruction is transcribed, then Neural Engine and Metal GPU appear as two labels for one signal."
+  width={1600}
+  height={760}
+  background="#000000"
+/>
+
+Working with an agent is mostly writing. A good prompt has the goal, the constraints, what you already tried and the error you are staring at. That is paragraphs, not commands, and typing it is the slow part. So we end up writing shorter prompts than we should, and the agent fills the gaps with guesses. Somewhere along the way, prompt engineering turned into writing essays to a terminal.
+
+Speaking fixes this. Most of us speak several times faster than we type, and rambling is fine because models handle messy input well. You can also keep your eyes on the diff or the terminal while you talk.
+
+Agent work also runs in a loop: give a task, read the output, reply, repeat. It happens dozens of times a day, so the input step has to be instant and cheap. A per-minute bill or a slow round trip adds up. And these prompts carry code, paths and internal context that you may not want to send to a third party. More on that below.
+
+That is the case for speech to text as the input for agents, and for running it locally.
+
+In this post, I will explore apps that do this. I will go from "paid cloud solutions" to a side-by-side of two free apps, Handy and FluidVoice.
+
+Here is the map of this post:
+
+- Cloud solutions: work great, but cost money and your voice leaves your machine
+- Local apps: same feel, no monthly fee
+- The field: five apps, and why I narrowed it to two
+- Handy: free, written in Rust, works on Windows, Mac and Linux
+- FluidVoice: free, Mac only, runs on the Apple Neural Engine
+- GPU vs Apple Neural Engine: where the work happens, and what I expected
+- Handy vs FluidVoice: FluidVoice used about 3.4x the energy, Handy had the better UX
+
+## Cloud solutions
+
+The first and most obvious way is a cloud solution. You hold a key and speak. The audio goes to the company's servers, and clean text comes back at your cursor. Your voice takes a round trip to a data center just to end up in a text box a few centimeters from your face.
+
+{/* REVIEW: Wispr Flow "best-known" and "set the bar" are the captain's claims; not re-checked against current pricing or features. */}
+Wispr Flow is the best-known one. The UX is great, and that is what set the bar for everything after it.
+
+At this point you have the feel we want. But there are three problems:
+
+- It costs a monthly fee
+- It stops working when your internet does
+- Your audio is sent to someone else's servers
+
+The last one matters more for agents than for regular dictation, because of what you end up saying out loud: file names, code, internal details.
+
+So let's move the whole thing to our own machine.
+
+## Local apps
+
+Whisper and Parakeet are now small and fast enough to run on a laptop. That means no monthly fee, no network dependency, and it works offline.
+
+A good app of this kind needs three things:
+
+- **Easy to use:** a global hotkey, push-to-talk, and text pasted at the cursor
+- **Light:** it sits in the background all day, so it can't hog memory or battery
+- **Quick:** even a small delay breaks the flow of talking
+
+## The field
+
+There are many free apps now. I looked at five of them, and only two made it to a full comparison. This is where they land:
+
+<FieldGrid />
+
+Here are the three I set aside, in the order I looked at them:
+
+- **OpenWhispr** is free and open source, and it does a lot: dictation, meeting notes and even an agent you can talk to. It works on Windows, Mac and Linux, and it works offline. But it is built with Electron. Shipping a whole browser so an app can wait for me to hold a key felt like a lot, and to me it also felt slow. This is an app that has to react the moment you press a key. I prefer apps written in Rust. I like my dictation apps a little rusty.
+- **OpenSuperWhisper** is a decent app. It is free, it works only on Mac, and it lets you pick from several on-device models. But it is fairly new, and the other options offered more features, so I passed on it.
+- **VoiceInk** is the odd one out, because it is not free. You pay once, between $25 and $49 depending on how many Macs you use it on, and there is no monthly fee. There is a free trial, and the source is public. It runs the models locally, and it works on Mac (there is also an iOS version), but only on Apple Silicon. I passed on it because it is paid.
+
+{/* REVIEW: this fairness line is crew's addition (from the outline report), not in the captain's draft. Keep, reword or cut. */}
+"It is paid" and "it is new" are my preferences, not verdicts. Either of those two may well be great for you.
+
+**Note**: A dictation app sits in the background all day. A small, quick app is one you forget is there, and that is exactly what you want.
+
+The same five, side by side:
+
+<FieldMatrix />
+
+## Handy
+
+Handy is free and open source. It works offline, and it runs on Windows, Mac and Linux. **If you are not on a Mac, this is the one to try.**
+
+The pipeline is simple: mic, then Silero VAD to drop the silence, then Whisper or Parakeet, then paste at the cursor. Whisper models use the GPU when one is available. Parakeet V3 is optimized for the CPU.
+
+<LocalPipeline />
+
+The backend is Rust (audio, VAD, inference) and the UI is React on Tauri, so there is no bundled Chromium. This is the main reason it made my list.
+
+**Note**: The Handy folks say they are not trying to build the fanciest app. They want one that is easy to fork and extend.
+
+But what if you are on a newer Mac, and want it even lighter?
+
+## FluidVoice
+
+FluidVoice is also free and open source. It is a Swift app, Mac only, built on top of FluidAudio, an SDK that runs the models on the Apple Neural Engine.
+
+{/* REVIEW: 210x RTFx and 2.5% WER are the captain's figures. FluidAudio's Documentation/Benchmarks.md (M4 Pro, 2024 MacBook Pro) currently lists English (US) at 207.4x RTFx, 5.4% WER and 2.5% CER, so "2.5% WER" may really be CER, and 210x is a rounding of 207.4x. Check against the source the captain used, then fix or keep. The M4 Pro is FluidAudio's test machine; confirm it is not the chip used for the energy run. */}
+These are FluidAudio's own numbers, not mine, measured on an M4 Pro: Parakeet TDT 0.6B runs at about 210x real time (RTFx), with 2.5% WER on English. The idea is that the CPU and GPU stay free for everything else.
+
+**Note**: The app is open source, but the formatting model that cleans up your text is a private runtime.
+
+**Note**: On Intel Macs, only the Whisper models work.
+
+## GPU vs Apple Neural Engine
+
+The main difference between the two apps is where the model runs, so let's look at that first.
+
+The **GPU** path is the portable one. Most runtimes support it, and most models run on it as they are. The catch is that it is shared. If you are running a local LLM, a big build or anything else that wants the GPU, dictation competes with it.
+
+The **Apple Neural Engine** is dedicated silicon. On paper it is the better fit for an always-on app: low power, and no contention with anything else. The catch is that it is Apple only, and models have to be converted to Core ML first.
+
+That was my expectation going in.
+
+<GpuVsAne />
+
+| | GPU | Apple Neural Engine |
+|---|---|---|
+| Works on | Almost any machine | Apple Silicon only |
+| Models | Almost any | Core ML conversions |
+| Contention | Shared with everything else | None |
+| Power (on paper) | Higher | Very low |
+| Best for | Windows, Linux, mixed setups | Always-on dictation on a Mac |
+
+**Note**: If you like Rust, there is a Rust binding for FluidAudio (fluidaudio-rs), so the Apple Neural Engine path isn't limited to Swift.
+
+## Handy vs FluidVoice
+
+I ran both side by side, and the first thing that stood out was battery. FluidVoice used more of it than Handy, even though it runs on the Apple Neural Engine, which is the opposite of what I expected. Following are the numbers from a live dictation run in each app.
+
+First, the headline: energy per minute of speech.
+
+<EnergyPerMinute />
+
+{/* REVIEW: why 3.4x. Per minute is the captain's choice; the sentence below and the Collapsible give the reason and the two other multipliers, all derived from the captain's numbers (0.0459 / 0.0127 = 3.6x, 1.94 / 0.42 = 4.6x). */}
+I am quoting energy per minute because the two runs were different lengths: 79.1 s of speech for Handy, about 84 s for FluidVoice. Raw energy gives 3.6x and combined power gives 4.6x, so 3.4x is the most conservative of the three.
+
+And this is where the power goes:
+
+<PowerBreakdown />
+
+Following are the two things that stand out:
+
+- **The CPU did not go quiet.** FluidVoice's CPU averaged 1.27 W, against 0.29 W for Handy. Moving the model to the Neural Engine didn't take the CPU out of the picture.
+- **The Neural Engine is not free.** At 0.65 W, it drew more on its own than Handy's CPU, GPU and Neural Engine combined (0.42 W).
+
+FluidVoice did use less GPU (0.03 W against 0.13 W), but a 0.1 W difference is small next to the rest.
+
+{/* REVIEW: caveats added by crew from the outline report (n=1, whole-app comparison). Captain to confirm the models each app ran (Handy: Whisper or Parakeet V3? FluidVoice: Parakeet TDT 0.6B?), since that decides how much of this is silicon and how much is model. */}
+**Note**: This is one live dictation run in each app, so it is a data point, not a benchmark. It also compares two whole apps (the app, the model it ran and the hardware it chose), not the GPU and the Neural Engine in isolation.
+
+<Collapsible kicker="Measurement notes" title="How I measured this, and the raw numbers">
+
+{/* REVIEW: the measurement tool, the window and what "measured energy" includes are missing from the draft. Fill in (e.g. powermetrics over the dictation window?). Also: Handy's 0.42 W over 79.1 s is about 0.0092 Wh, but the table says 0.0127 Wh (about 0.58 W). FluidVoice's numbers reconcile (1.94 W over 84 s is about 0.0453 Wh vs 0.0459). Decide what to publish. */}
+
+| Metric | Handy | FluidVoice |
+|---|---|---|
+| Spoken audio | 79.1 s | ~84 s |
+| Avg CPU power | 0.29 W | 1.27 W |
+| Avg GPU power | 0.13 W | 0.03 W |
+| Avg Neural Engine power | 0 W | 0.65 W |
+| Combined CPU/GPU/ANE | 0.42 W | 1.94 W |
+| Measured energy | 0.0127 Wh | 0.0459 Wh |
+| Energy per minute spoken | ~0.0096 Wh/min | ~0.0328 Wh/min |
+
+Energy per minute is the measured energy divided by the minutes of speech. Combined is the CPU, GPU and Neural Engine power added together. Each column is a single run.
+
+</Collapsible>
+
+So running on the Apple Neural Engine doesn't guarantee lower battery use, at least in my testing. Battery wasn't the only place Handy came out ahead, though. I also really liked its UX.
+
+{/* REVIEW: the "one run, a newer build could close the gap" hedge is crew's addition from the outline report. */}
+It is one run, so a newer FluidAudio or Core ML build could well close the gap.
+
+Handy is very easy to use and fast, so I'm using it to draft this blog post as well.

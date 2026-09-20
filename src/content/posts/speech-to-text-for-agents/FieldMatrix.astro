@@ -1,0 +1,57 @@
+---
+import SwissFigure from "../development-at-the-speed-of-thought/SwissFigure.astro";
+
+// REVIEW: "native" for OpenSuperWhisper and VoiceInk is not in the captain's
+// draft (it comes from the outline board). VoiceInk's "Mac, iOS" and
+// "$25-49" are from the draft; the price was not re-checked against the
+// current VoiceInk site.
+---
+
+<SwissFigure
+  height={196}
+  label="The five apps side by side. OpenWhispr: Windows, Mac and Linux; Electron; free. OpenSuperWhisper: Mac only; native; free. VoiceInk: Mac and iOS; native; paid, 25 to 49 dollars once. Handy: Windows, Mac and Linux; Rust; free. FluidVoice: Mac only; Swift; free. Handy and FluidVoice are the two compared."
+>
+  <g class="k mut">
+    <text x="24" y="34">app</text>
+    <text x="130" y="34">runs on</text>
+    <text x="208" y="34">runtime</text>
+    <text x="266" y="34">price</text>
+  </g>
+  <line class="rule" x1="20" y1="42" x2="300" y2="42"></line>
+
+  <g font-size="10">
+    <text x="24" y="62">OpenWhispr</text>
+    <text class="mut" x="130" y="62" font-size="9">win mac linux</text>
+    <text class="mut" x="208" y="62" font-size="9">Electron</text>
+    <text class="mut" x="266" y="62" font-size="9">free</text>
+
+    <text x="24" y="86">OpenSuperWhisper</text>
+    <text class="mut" x="130" y="86" font-size="9">mac</text>
+    <text class="mut" x="208" y="86" font-size="9">native</text>
+    <text class="mut" x="266" y="86" font-size="9">free</text>
+
+    <text x="24" y="110">VoiceInk</text>
+    <text class="mut" x="130" y="110" font-size="9">mac, iOS</text>
+    <text class="mut" x="208" y="110" font-size="9">native</text>
+    <text class="mut" x="266" y="110" font-size="9">$25-49</text>
+  </g>
+
+  <rect class="boxa" x="16" y="122" width="288" height="56" rx="1"></rect>
+  <line class="rule" x1="20" y1="150" x2="300" y2="150"></line>
+  <g font-size="10" font-weight="700">
+    <text class="acc" x="24" y="141">Handy</text>
+    <text class="acc" x="24" y="169">FluidVoice</text>
+  </g>
+  <g font-size="9">
+    <text x="130" y="141">win mac linux</text>
+    <text x="208" y="141">Rust</text>
+    <text x="266" y="141">free</text>
+    <text x="130" y="169">mac</text>
+    <text x="208" y="169">Swift</text>
+    <text x="266" y="169">free</text>
+  </g>
+
+  <Fragment slot="caption">
+    The same five, as facts. The outlined rows are the two I compared.
+  </Fragment>
+</SwissFigure>
