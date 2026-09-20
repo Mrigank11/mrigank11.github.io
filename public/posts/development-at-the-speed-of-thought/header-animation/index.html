@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:,">
+    <meta name="viewport" content="width=1600, height=600">
+    <!-- Self-hosted so the post makes no third-party requests: GSAP 3.14.2 + Archivo Black / Space Mono (latin). -->
+    <script src="./gsap.min.js"></script>
+    <script>window.__tailwindReady = Promise.resolve(true);</script>
+    <style>
+      @font-face { font-family: "Archivo Black"; font-weight: 400; font-display: block;
+        src: url("./fonts/archivo-black-latin-400-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Space Mono"; font-weight: 400; font-display: block;
+        src: url("./fonts/space-mono-latin-400-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Space Mono"; font-weight: 700; font-display: block;
+        src: url("./fonts/space-mono-latin-700-normal.woff2") format("woff2"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      :root {
+        --bg: #0d0e12; --ink: #f4f4f5; --muted: #8b90a0;
+        --accent: #6366f1; --accent-2: #818cf8;
+      }
+      html, body { width: 1600px; height: 600px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 100%; height: 100%; color: var(--ink); font-family: "Archivo Black", sans-serif; }
+
+      #grid { position: absolute; inset: 0; z-index: 1; }
+
+      .headline { position: absolute; left: 80px; top: 44px; font-size: 80px; line-height: 1;
+        letter-spacing: -0.02em; z-index: 3; }
+      .headline .dot { color: var(--accent); }
+
+      .kicker { position: absolute; right: 80px; top: 56px; text-align: right;
+        font-family: "Space Mono", monospace; font-weight: 700; font-size: 15px;
+        letter-spacing: 0.18em; color: var(--accent-2); z-index: 3; }
+
+      /* commit counter (data readout, top-right) */
+      .counter { position: absolute; right: 80px; top: 104px; text-align: right; z-index: 3; opacity: 0; }
+      .counter .num { font-family: "Archivo Black", sans-serif; font-size: 52px; line-height: 1; color: var(--ink); }
+      .counter .num .x { color: var(--accent); }
+      .counter .sub { font-family: "Space Mono", monospace; font-size: 12px; letter-spacing: 0.06em;
+        color: var(--muted); margin-top: 6px; }
+
+      /* foundation */
+      .fblock { position: absolute; left: 80px; width: 200px; height: 32px; border-radius: 2px;
+        background: var(--accent); transform-origin: left center; transform: scaleX(0); z-index: 2;
+        box-shadow: 0 10px 30px -18px rgba(99,102,241,0.9); }
+      .findex { position: absolute; left: 40px; width: 30px; text-align: right;
+        font-family: "Space Mono", monospace; font-weight: 700; font-size: 15px; color: var(--muted);
+        opacity: 0; z-index: 2; }
+      .flabel { position: absolute; left: 300px; font-family: "Space Mono", monospace;
+        font-weight: 400; font-size: 20px; color: var(--ink); white-space: nowrap; opacity: 0; z-index: 2; }
+
+      /* worktrees */
+      #forks, #converge { position: absolute; inset: 0; z-index: 2; }
+      .wire { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+      .wtlabel { position: absolute; left: 352px; font-family: "Space Mono", monospace;
+        font-weight: 400; font-size: 17px; color: #c7d2fe; white-space: nowrap; opacity: 0; z-index: 2; }
+      .lane { position: absolute; left: 500px; height: 14px; width: 620px; border-radius: 2px;
+        background: var(--accent); transform-origin: left center; transform: scaleX(0); z-index: 2;
+        box-shadow: 0 8px 22px -16px rgba(99,102,241,0.9); }
+
+      /* merge */
+      .merge-block { position: absolute; left: 1200px; top: 341px; width: 42px; height: 42px;
+        margin: -21px 0 0 -21px; border-radius: 2px; background: var(--accent); transform: scale(0);
+        transform-origin: center; z-index: 3; box-shadow: 0 0 30px -6px rgba(99,102,241,0.8); }
+      .merge-check { position: absolute; left: 1200px; top: 341px; width: 42px; height: 42px;
+        margin: -21px 0 0 -21px; z-index: 4; }
+      .merge-check polyline { fill: none; stroke: #0d0e12; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+      .merge-label { position: absolute; left: 1250px; top: 341px; transform: translateY(-50%);
+        font-family: "Space Mono", monospace; font-size: 16px; color: var(--muted); white-space: nowrap;
+        opacity: 0; z-index: 4; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-4fr0" id="root" data-composition-id="main" data-start="0" data-duration="11" data-width="1600" data-height="600">
+      <svg data-hf-id="hf-vpb0" id="grid" width="1600" height="600">
+        <g data-hf-id="hf-rnjb" stroke="rgba(255,255,255,0.05)" stroke-width="1">
+          <line data-hf-id="hf-f3hh" x1="80" y1="30" x2="80" y2="570" /><line data-hf-id="hf-ygmb" x1="200" y1="30" x2="200" y2="570" />
+          <line data-hf-id="hf-v8jh" x1="320" y1="30" x2="320" y2="570" /><line data-hf-id="hf-dpn3" x1="440" y1="30" x2="440" y2="570" />
+          <line data-hf-id="hf-wok5" x1="560" y1="30" x2="560" y2="570" /><line data-hf-id="hf-2ha3" x1="680" y1="30" x2="680" y2="570" />
+          <line data-hf-id="hf-8qmf" x1="800" y1="30" x2="800" y2="570" /><line data-hf-id="hf-a6mt" x1="920" y1="30" x2="920" y2="570" />
+          <line data-hf-id="hf-sxz1" x1="1040" y1="30" x2="1040" y2="570" /><line data-hf-id="hf-z2ml" x1="1160" y1="30" x2="1160" y2="570" />
+          <line data-hf-id="hf-qyr1" x1="1280" y1="30" x2="1280" y2="570" /><line data-hf-id="hf-e44t" x1="1400" y1="30" x2="1400" y2="570" />
+          <line data-hf-id="hf-ylfh" x1="1520" y1="30" x2="1520" y2="570" />
+          <line data-hf-id="hf-xsti" x1="80" y1="170" x2="1520" y2="170" /><line data-hf-id="hf-7y9y" x1="80" y1="486" x2="1520" y2="486" />
+        </g>
+        <g data-hf-id="hf-dd5g" stroke="#6366f1" stroke-width="1.5" opacity="0.7">
+          <line data-hf-id="hf-romx" x1="52" y1="60" x2="68" y2="60" /><line data-hf-id="hf-cyfh" x1="60" y1="52" x2="60" y2="68" />
+          <line data-hf-id="hf-48jh" x1="1532" y1="60" x2="1548" y2="60" /><line data-hf-id="hf-n8ux" x1="1540" y1="52" x2="1540" y2="68" />
+          <line data-hf-id="hf-4i6v" x1="52" y1="540" x2="68" y2="540" /><line data-hf-id="hf-ra3d" x1="60" y1="532" x2="60" y2="548" />
+          <line data-hf-id="hf-frmz" x1="1532" y1="540" x2="1548" y2="540" /><line data-hf-id="hf-8ood" x1="1540" y1="532" x2="1540" y2="548" />
+        </g>
+      </svg>
+
+      <div data-hf-id="hf-sodk" class="headline"><span data-hf-id="hf-lff6" id="hword">THINK</span><span data-hf-id="hf-6jgg" class="dot">.</span></div>
+      <div data-hf-id="hf-oeop" class="kicker" id="kicker">01 / FOUNDATION</div>
+
+      <div data-hf-id="hf-9xle" class="counter" id="counter">
+        <div data-hf-id="hf-q8ga" class="num" id="counterNum">0</div>
+        <div data-hf-id="hf-jv2e" class="sub" id="counterSub">COMMITS · 3 WORKTREES</div>
+      </div>
+
+      <!-- Foundation -->
+      <div data-hf-id="hf-ndjs" class="findex" id="fi1" style="top: 258px;">01</div>
+      <div data-hf-id="hf-n40g" class="findex" id="fi2" style="top: 308px;">02</div>
+      <div data-hf-id="hf-lmqn" class="findex" id="fi3" style="top: 358px;">03</div>
+      <div data-hf-id="hf-tv4x" class="findex" id="fi4" style="top: 408px;">04</div>
+      <div data-hf-id="hf-5sor" class="fblock" id="fb1" style="top: 250px;"></div>
+      <div data-hf-id="hf-p4ji" class="fblock" id="fb2" style="top: 300px;"></div>
+      <div data-hf-id="hf-492i" class="fblock" id="fb3" style="top: 350px;"></div>
+      <div data-hf-id="hf-kmil" class="fblock" id="fb4" style="top: 400px;"></div>
+      <div data-hf-id="hf-nyh4" class="flabel" id="fl1" style="top: 256px;">requirements</div>
+      <div data-hf-id="hf-mytu" class="flabel" id="fl2" style="top: 306px;">architecture</div>
+      <div data-hf-id="hf-2rw6" class="flabel" id="fl3" style="top: 356px;">tests</div>
+      <div data-hf-id="hf-njbf" class="flabel" id="fl4" style="top: 406px;">orchestration</div>
+
+      <!-- Fork: foundation → 3 worktree lanes -->
+      <svg data-hf-id="hf-gabx" id="forks" width="1600" height="600">
+        <path data-hf-id="hf-7o1f" id="fk1" class="wire" d="M 280,341 H 310 V 281 H 344" />
+        <path data-hf-id="hf-rwxn" id="fk2" class="wire" d="M 280,341 H 344" />
+        <path data-hf-id="hf-62cf" id="fk3" class="wire" d="M 280,341 H 310 V 401 H 344" />
+      </svg>
+
+      <!-- Worktree labels + parallel build lanes -->
+      <div data-hf-id="hf-ko3d" class="wtlabel" id="wl1" style="top: 272px;">wt/feat-auth</div>
+      <div data-hf-id="hf-8zlg" class="wtlabel" id="wl2" style="top: 332px;">wt/api</div>
+      <div data-hf-id="hf-1iav" class="wtlabel" id="wl3" style="top: 392px;">wt/ui</div>
+      <div data-hf-id="hf-nl4e" class="lane" id="lb1" style="top: 274px;"></div>
+      <div data-hf-id="hf-wtl6" class="lane" id="lb2" style="top: 334px;"></div>
+      <div data-hf-id="hf-4fih" class="lane" id="lb3" style="top: 394px;"></div>
+
+      <!-- Converge → merge -->
+      <svg data-hf-id="hf-5uot" id="converge" width="1600" height="600">
+        <path data-hf-id="hf-jnez" id="cv1" class="wire" d="M 1120,281 H 1160 V 341 H 1200" />
+        <path data-hf-id="hf-mjdl" id="cv2" class="wire" d="M 1120,341 H 1200" />
+        <path data-hf-id="hf-y9pv" id="cv3" class="wire" d="M 1120,401 H 1160 V 341 H 1200" />
+      </svg>
+      <div data-hf-id="hf-74yx" class="merge-block" id="mergeBlock"></div>
+      <svg data-hf-id="hf-8ef3" class="merge-check" id="mergeCheck" viewBox="0 0 42 42">
+        <polyline data-hf-id="hf-hd3q" points="12,22 18,28 30,14" stroke-dasharray="30" stroke-dashoffset="30" />
+      </svg>
+      <div data-hf-id="hf-u3gc" class="merge-label" id="mergeLabel">merge ▸ main</div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { duration: 0.4, ease: "expo.out" } });
+
+      // ---- Master seek-safe text driver: headline word, kicker, counter sub ----
+      const hword = document.getElementById("hword");
+      const kicker = document.getElementById("kicker");
+      const csub = document.getElementById("counterSub");
+      tl.to({}, {
+        duration: 11, ease: "none",
+        onUpdate: () => {
+          const t = tl.time();
+          const hw = t < 3.5 ? "THINK" : t < 7.1 ? "BUILD" : t < 9.55 ? "SHIP" : "THINK";
+          const kk = t < 3.5 ? "01 / FOUNDATION" : t < 7.1 ? "02 / PARALLEL" : t < 9.55 ? "03 / SHIPPED" : "01 / FOUNDATION";
+          const cs = t < 7.1 ? "COMMITS · 3 WORKTREES" : "COMMITS · 0 CONFLICTS";
+          if (hword.textContent !== hw) hword.textContent = hw;
+          if (kicker.textContent !== kk) kicker.textContent = kk;
+          if (csub.textContent !== cs) csub.textContent = cs;
+        },
+      }, 0);
+
+      // ===== ACT 1 — foundation snaps in (0.5–3.4s) =====
+      const blocks = ["#fb1", "#fb2", "#fb3", "#fb4"];
+      const idx = ["#fi1", "#fi2", "#fi3", "#fi4"];
+      const labels = ["#fl1", "#fl2", "#fl3", "#fl4"];
+      const a1 = 0.5, a1step = 0.62;
+      blocks.forEach((b, i) => {
+        const at = a1 + i * a1step;
+        tl.fromTo(b, { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "expo.out", immediateRender: false }, at);
+        tl.fromTo(idx[i], { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power4.out", immediateRender: false }, at);
+        tl.fromTo(labels[i], { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.28, ease: "power4.out", immediateRender: false }, at + 0.12);
+      });
+
+      // ===== ACT 2 — fork into worktrees, parallel build, counter rollup (3.5–7.0s) =====
+      // clear the foundation labels so the worktree graph owns the centre (overlap fix)
+      tl.to(labels.concat(idx), { opacity: 0, duration: 0.35, ease: "power4.in" }, 3.5);
+
+      // fork wires draw
+      const forkEls = ["#fk1", "#fk2", "#fk3"].map((s) => document.querySelector(s));
+      const forkLen = forkEls.map((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; return L; });
+      forkEls.forEach((el, i) => {
+        tl.fromTo(el, { strokeDashoffset: forkLen[i] }, { strokeDashoffset: 0, duration: 0.5, ease: "expo.out", immediateRender: false }, 3.9 + i * 0.06);
+      });
+
+      // worktree labels
+      const wl = ["#wl1", "#wl2", "#wl3"];
+      wl.forEach((s, i) => tl.fromTo(s, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.3, ease: "power4.out", immediateRender: false }, 4.15 + i * 0.1));
+
+      // lanes fill in parallel, independent speeds
+      tl.fromTo("#lb1", { scaleX: 0 }, { scaleX: 1, duration: 1.9, ease: "power3.out", immediateRender: false }, 4.4);
+      tl.fromTo("#lb2", { scaleX: 0 }, { scaleX: 1, duration: 2.3, ease: "power3.out", immediateRender: false }, 4.35);
+      tl.fromTo("#lb3", { scaleX: 0 }, { scaleX: 1, duration: 1.6, ease: "power3.out", immediateRender: false }, 4.5);
+
+      // counter appears + rolls up 0 → 128 (decelerating rollup)
+      tl.fromTo("#counter", { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, 3.95);
+      const counterNum = document.getElementById("counterNum");
+      const cp = { v: 0 };
+      tl.fromTo(cp, { v: 0 }, {
+        v: 128, duration: 2.5, ease: "power2.out", immediateRender: false,
+        onUpdate: () => { counterNum.textContent = Math.round(cp.v); },
+      }, 4.4);
+
+      // ===== ACT 3 — converge, merge, ship (7.1–8.4s) =====
+      const cvEls = ["#cv1", "#cv2", "#cv3"].map((s) => document.querySelector(s));
+      const cvLen = cvEls.map((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; return L; });
+      cvEls.forEach((el, i) => tl.fromTo(el, { strokeDashoffset: cvLen[i] }, { strokeDashoffset: 0, duration: 0.5, ease: "expo.out", immediateRender: false }, 7.1 + i * 0.08));
+      tl.fromTo("#mergeBlock", { scale: 0 }, { scale: 1, duration: 0.42, ease: "expo.out", immediateRender: false }, 7.55);
+      tl.fromTo("#mergeCheck polyline", { strokeDashoffset: 30 }, { strokeDashoffset: 0, duration: 0.3, ease: "power3.out", immediateRender: false }, 7.85);
+      tl.fromTo("#mergeLabel", { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.32, ease: "power4.out", immediateRender: false }, 7.9);
+      // counter recolours to accent on ship
+      tl.to("#counterNum", { color: "#818cf8", duration: 0.3, ease: "power2.out" }, 7.55);
+
+      // hold ~8.4–9.4s
+
+      // ===== ACT 4 — hard reset to baseline for a seamless loop (9.5–11s) =====
+      const out = 9.5;
+      tl.to(["#mergeLabel"], { opacity: 0, duration: 0.35, ease: "power4.in" }, out);
+      tl.to(["#mergeBlock", "#mergeCheck"], { opacity: 0, duration: 0.4, ease: "power4.in" }, out);
+      tl.to(["#converge", "#forks"], { opacity: 0, duration: 0.45, ease: "power4.in" }, out);
+      tl.to(["#lb1", "#lb2", "#lb3"], { opacity: 0, duration: 0.45, ease: "power4.in" }, out);
+      tl.to(wl, { opacity: 0, duration: 0.4, ease: "power4.in" }, out);
+      tl.to("#counter", { opacity: 0, duration: 0.4, ease: "power4.in" }, out);
+      tl.to(blocks, { opacity: 0, duration: 0.5, ease: "power4.in" }, out + 0.1);
+      // restore counter colour so the next loop starts clean
+      tl.set("#counterNum", { color: "#f4f4f5" }, 10.6);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

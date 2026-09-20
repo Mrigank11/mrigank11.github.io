@@ -1,0 +1,144 @@
+---
+// Plays a HyperFrames composition inline with the official <hyperframes-player>
+// web component. Usage (from a page, or an .mdx post):
+//
+//   <HyperframesEmbed
+//     src="/posts/<slug>/animation/index.html"   // composition HTML in public/
+//     poster="/posts/<slug>/animation-poster.png" // still, sized width x height
+//     alt="What the animation shows"
+//   />
+//
+// Self-host everything the composition needs (GSAP, fonts) next to it in
+// public/, so the page makes no third-party requests. The poster paints first
+// and is all that reduced-motion users get: for them neither the composition
+// nor the player bundle is ever loaded. Playback pauses while offscreen.
+interface Props {
+  src: string;
+  poster: string;
+  alt: string;
+  /** Composition size in px; only the aspect ratio matters for layout. */
+  width?: number;
+  height?: number;
+  /** Colour behind the poster (match the composition's background). */
+  background?: string;
+  class?: string;
+}
+
+const {
+  src,
+  poster,
+  alt,
+  width = 1600,
+  height = 600,
+  background = "#0d0e12",
+  class: className,
+} = Astro.props;
+
+const PLAYER_SRC = "/vendor/hyperframes-player-0.8.56.global.js";
+---
+
+<figure
+  class:list={[
+    "not-prose border-border my-8 overflow-hidden rounded-lg border",
+    className,
+  ]}
+  style={`background: ${background}`}
+  data-hyperframes-embed
+  data-player-src={PLAYER_SRC}
+>
+  <div class="relative w-full" style={`aspect-ratio: ${width} / ${height}`}>
+    <img
+      src={poster}
+      alt={alt}
+      width={width}
+      height={height}
+      fetchpriority="high"
+      class="absolute inset-0 h-full w-full"
+    />
+    <hyperframes-player
+      data-src={src}
+      width={width}
+      height={height}
+      loop
+      aria-label={alt}
+      class="pointer-events-none absolute inset-0 block h-full w-full opacity-0 transition-opacity duration-500 data-[ready]:opacity-100"
+    ></hyperframes-player>
+  </div>
+</figure>
+
+<script>
+  interface Player extends HTMLElement {
+    ready: boolean;
+    play(): void;
+    pause(): void;
+  }
+
+  // The player bundle is fetched at most once per page, and only on demand.
+  let playerLoad: Promise<void> | undefined;
+  function loadPlayer(url: string) {
+    playerLoad ??= customElements.get("hyperframes-player")
+      ? Promise.resolve()
+      : new Promise<void>((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = url;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error(`Failed to load ${url}`));
+          document.head.append(script);
+        });
+    return playerLoad;
+  }
+
+  function init() {
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+
+    document
+      .querySelectorAll<HTMLElement>("[data-hyperframes-embed]")
+      .forEach(figure => {
+        const player = figure.querySelector<Player>("hyperframes-player");
+        const src = player?.dataset.src;
+        const playerSrc = figure.dataset.playerSrc;
+        if (!player || !src || !playerSrc) return;
+
+        let visible = false;
+
+        // Play only while on screen and motion is allowed.
+        const update = () => {
+          if (!player.ready) return;
+          if (visible && !reduced.matches) player.play();
+          else player.pause();
+        };
+
+        player.addEventListener("ready", () => {
+          player.setAttribute("data-ready", "");
+          update();
+        });
+
+        new IntersectionObserver(([entry]) => {
+          visible = entry.isIntersecting;
+          update();
+        }).observe(figure);
+
+        // Reduced motion: never load the composition, so the poster is the
+        // whole story. Also follows the OS setting changing mid-page.
+        const sync = async () => {
+          if (!figure.isConnected) {
+            return reduced.removeEventListener("change", sync);
+          }
+          if (reduced.matches) {
+            player.removeAttribute("data-ready");
+            if (player.ready) player.pause();
+          } else if (!player.hasAttribute("src")) {
+            await loadPlayer(playerSrc);
+            if (!reduced.matches) player.setAttribute("src", src);
+          } else if (player.ready) {
+            player.setAttribute("data-ready", "");
+            update();
+          }
+        };
+        reduced.addEventListener("change", sync);
+        void sync();
+      });
+  }
+
+  document.addEventListener("astro:page-load", init);
+</script>

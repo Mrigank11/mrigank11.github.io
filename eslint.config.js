@@ -18,5 +18,8 @@ export default [
     },
   },
   { rules: { "no-console": "error" } },
-  { ignores: ["dist/**", ".astro/**", "public/pagefind/**"] },
+  {
+    // public/ is served as-is; its scripts are vendored third-party bundles (GSAP, HyperFrames player).
+    ignores: ["dist/**", ".astro/**", "public/pagefind/**", "public/**/*.js"],
+  },
 ];
