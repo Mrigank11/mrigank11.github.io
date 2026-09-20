@@ -1,0 +1,50 @@
+---
+import SwissFigure from "./SwissFigure.astro";
+---
+
+<SwissFigure
+  label="A requirements list. Slack ticketing and custom fields are solid and checked, marked v1. Web UI (v2), SSO / login (v3) and attachments (v3) are ghosted with dashed boxes: not built yet, but already written down."
+>
+  <rect class="box" x="30" y="30" width="260" height="140" rx="2"></rect>
+  <text
+    class="acc"
+    x="44"
+    y="52"
+    font-size="10"
+    font-weight="700"
+    letter-spacing="1">## WHAT IT SHOULD DO</text
+  >
+  <line class="rule" x1="44" y1="60" x2="276" y2="60"></line>
+
+  <g font-size="11">
+    <rect class="bar" x="44" y="70" width="12" height="12"></rect>
+    <polyline class="tick" points="47,76 49.5,78.5 53.5,73"></polyline>
+    <text x="66" y="80">Slack ticketing</text>
+    <text class="mut" x="252" y="80" font-size="10">v1</text>
+
+    <rect class="bar" x="44" y="90" width="12" height="12"></rect>
+    <polyline class="tick" points="47,96 49.5,98.5 53.5,93"></polyline>
+    <text x="66" y="100">Custom fields</text>
+    <text class="mut" x="252" y="100" font-size="10">v1</text>
+
+    <rect class="boxa ghost" x="44" y="110" width="12" height="12" opacity="0.7"
+    ></rect>
+    <text class="mut" x="66" y="120">Web UI</text>
+    <text class="mut" x="252" y="120" font-size="10">v2</text>
+
+    <rect class="boxa ghost" x="44" y="130" width="12" height="12" opacity="0.7"
+    ></rect>
+    <text class="mut" x="66" y="140">SSO / login</text>
+    <text class="mut" x="252" y="140" font-size="10">v3</text>
+
+    <rect class="boxa ghost" x="44" y="150" width="12" height="12" opacity="0.7"
+    ></rect>
+    <text class="mut" x="66" y="160">Attachments</text>
+    <text class="mut" x="252" y="160" font-size="10">v3</text>
+  </g>
+
+  <Fragment slot="caption">
+    Requirements for v1, with the v2 and v3 use-cases already written down (the
+    faded, dashed ones), so the architecture can plan for them.
+  </Fragment>
+</SwissFigure>

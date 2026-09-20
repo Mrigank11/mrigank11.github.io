@@ -11,7 +11,10 @@ tags:
   - claude-code
 description: With today's models, writing code has become the cheap part — the real work is thinking. Here's the workflow I use to let agents build a real project in parallel, without breaking things.
 ---
-import ArchDiagram from "./ArchDiagram.astro";
+import FoundationStack from "./FoundationStack.astro";
+import ThinkAheadSpec from "./ThinkAheadSpec.astro";
+import SurfaceAgnosticCore from "./SurfaceAgnosticCore.astro";
+import CrewHierarchy from "./CrewHierarchy.astro";
 
 {/* TODO: header animation goes here — Hyperframes loop (human thinks, agents build in parallel). Poster/still fallback + prefers-reduced-motion. Drop the <video>/component in once the animation task lands. */}
 
@@ -46,6 +49,8 @@ Line that up against the two problems:
 
 Everything else — worktrees, running agents in parallel, reviewing — is about doing all this *fast*.
 
+<FoundationStack />
+
 And yes, I know: requirements docs, architecture docs, tests. This is all old, boring software-engineering advice. But bear with me — agents turn it from "nice to have" into "the thing holding everything up." The discipline you could get away with skipping on a solo project is exactly the discipline that stops an agent from wrecking it.
 
 Let me make it concrete. **mboard** is a Slack-first ticketing / work-tracking tool — a Go backend (an API plus a Slack bot), a Next.js web UI, and Postgres for storage. One line from its requirements doc does a lot of work: it was *"designed from day one to support the full ticketing vision… so the web UI is an additive surface, not a rewrite."* Hold onto that. Here's the whole flow:
@@ -63,6 +68,8 @@ The first thing I do — before writing a single line of code — is write down 
 
 - **No implementation details.** This doc is about *what* and *why*, never *how*.
 - **Think ahead.** Try to list out future use-cases now, because the architecture (next step) has to plan for them.
+
+<ThinkAheadSpec />
 
 This isn't documentation for its own sake. This doc becomes **the memory the agents read back.** mboard's requirements file is about 250 lines, with zero code. My favourite part isn't the feature list though — it's the "out of scope" section:
 
@@ -83,7 +90,7 @@ Architecture matters more than ever now — exactly *because* you're going to le
 
 For mboard, the whole trick was making the core **not care which app it's shown in**. The "board" doesn't know Slack exists:
 
-<ArchDiagram />
+<SurfaceAgnosticCore />
 
 Three decisions carried it:
 
@@ -153,6 +160,8 @@ My first taste of this loop was [vibe-kanban](https://www.vibekanban.com/), and 
 > **Note:** the company behind vibe-kanban has since shut down, but the project lives on as open-source and community-maintained.
 
 Eventually I built my own version on top of [Paseo](https://paseo.dev), because I wanted something a bit more hands-on than a board. The idea is **talk to one agent, ship with a team:** I talk to a single "first mate", which writes up each task, hands it to worker agents in their own worktrees, watches them finish, and gives me back finished pull requests or reports — it never touches the code itself. The difference from vibe-kanban is that it's more like a small team with a lead than a to-do board: work is either a "scout" (go look into something and report back) or a "ship" (make a change and open a PR), and nothing gets merged unless I say so.
+
+<CrewHierarchy />
 
 The bit I like most: **use the expensive model for planning, the cheap one for typing.** Hard planning goes to a top-tier model; the actual implementation goes to a cheaper one working in its own worktree, thrown away after merge. Pay for judgement, not for typing.
 

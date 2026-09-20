@@ -1,0 +1,58 @@
+---
+import SwissFigure from "./SwissFigure.astro";
+---
+
+<SwissFigure
+  height={244}
+  label="mboard's data model. Two surfaces, Slack today and a web UI later (dashed), plug through a channel_links table into a surface-agnostic core: boards, which become the web UI's Area; tickets, then ticket_events, then event_field_changes, the source of truth for custom-field values; and field_definitions, where types are data, not migrations. Below the core, users and user_identities: every identity points at a local user."
+>
+  <text class="k mut" x="24" y="24">surfaces</text>
+  <rect class="box" x="54" y="30" width="100" height="22" rx="2"></rect>
+  <text x="62" y="45" font-size="9.5">Slack · today</text>
+  <rect class="box ghost" x="166" y="30" width="100" height="22" rx="2"></rect>
+  <text class="mut" x="174" y="45" font-size="9.5">Web UI · later</text>
+  <path class="wire" d="M104,52 V60 H160 V66"></path>
+  <path class="wire" d="M216,52 V60 H160"></path>
+
+  <rect class="boxa" x="110" y="66" width="100" height="20" rx="2"></rect>
+  <text x="118" y="80" font-size="9.5">channel_links</text>
+  <path class="wire" d="M160,86 V94"></path>
+
+  <rect
+    class="box"
+    x="30"
+    y="94"
+    width="260"
+    height="106"
+    rx="2"
+    style="stroke: var(--accent)"></rect>
+  <text class="k acc" x="40" y="108">surface-agnostic core</text>
+
+  <rect class="bar" x="40" y="116" width="64" height="16" rx="1"></rect>
+  <text class="on-acc" x="47" y="127" font-size="9.5">boards</text>
+  <text x="112" y="127" font-size="9.5">= web UI "Area"</text>
+
+  <text x="40" y="149" font-size="9.5">tickets</text>
+  <text class="mut" x="104" y="149" font-size="8.5">built-in fields</text>
+  <text x="50" y="162" font-size="9.5">▸ ticket_events</text>
+  <text class="mut" x="150" y="162" font-size="8.5">one row per action</text>
+  <text x="60" y="175" font-size="9.5">▸ event_field_changes</text>
+  <text class="mut" x="200" y="175" font-size="8.5">source of truth</text>
+
+  <text x="40" y="192" font-size="9.5">field_definitions</text>
+  <text class="mut" x="146" y="192" font-size="8.5"
+    >types: data, not migrations</text
+  >
+
+  <path class="wire" d="M160,200 V208"></path>
+  <rect class="box" x="74" y="208" width="76" height="20" rx="2"></rect>
+  <text x="82" y="222" font-size="9.5">users</text>
+  <rect class="box" x="160" y="208" width="100" height="20" rx="2"></rect>
+  <text x="168" y="222" font-size="9.5">user_identities</text>
+
+  <Fragment slot="caption">
+    The board doesn't know Slack exists: a channel is just a row that maps to a
+    board. Every action on a ticket is an event, and every identity points at a
+    local user. That's why the web UI was an additive surface, not a rewrite.
+  </Fragment>
+</SwissFigure>

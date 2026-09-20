@@ -1,0 +1,31 @@
+---
+import SwissFigure from "./SwissFigure.astro";
+---
+
+<SwissFigure
+  height={190}
+  label="The foundation, as four numbered stacked bars: 01 requirements, 02 architecture, 03 tests, 04 orchestration."
+>
+  <text class="k mut" x="24" y="32">the foundation</text>
+  <g font-size="10" font-weight="700">
+    <text class="mut" x="20" y="69">01</text>
+    <text class="mut" x="20" y="99">02</text>
+    <text class="mut" x="20" y="129">03</text>
+    <text class="mut" x="20" y="159">04</text>
+  </g>
+  <rect class="bar" x="44" y="56" width="120" height="16" rx="1"></rect>
+  <rect class="bar" x="44" y="86" width="120" height="16" rx="1"></rect>
+  <rect class="bar" x="44" y="116" width="120" height="16" rx="1"></rect>
+  <rect class="bar" x="44" y="146" width="120" height="16" rx="1"></rect>
+  <g font-size="11">
+    <text x="176" y="69">requirements</text>
+    <text x="176" y="99">architecture</text>
+    <text x="176" y="129">tests</text>
+    <text x="176" y="159">orchestration</text>
+  </g>
+
+  <Fragment slot="caption">
+    Four things hold the setup up: written requirements, an architecture built
+    for change, tests, and the orchestration that runs agents in parallel.
+  </Fragment>
+</SwissFigure>

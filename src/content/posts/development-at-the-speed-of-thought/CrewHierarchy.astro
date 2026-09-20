@@ -1,0 +1,45 @@
+---
+import SwissFigure from "./SwissFigure.astro";
+---
+
+<SwissFigure
+  label="Three tiers. At the top, the captain (you). Below, one first mate. At the bottom, three crew, each in its own worktree and tagged scout, ship and ship, connected to the first mate by wires."
+>
+  <text class="k mut" x="24" y="28">talk to one · ship with a crew</text>
+
+  <rect class="boxa" x="108" y="38" width="104" height="26" rx="2"></rect>
+  <text x="120" y="55">captain · you</text>
+  <path class="wire" d="M160,64 V80"></path>
+
+  <rect class="box" x="108" y="80" width="104" height="26" rx="2"></rect>
+  <text x="120" y="97">first mate</text>
+
+  <path class="wire" d="M160,106 V120 H60 V132"></path>
+  <path class="wire" d="M160,106 V132"></path>
+  <path class="wire" d="M160,106 V120 H260 V132"></path>
+
+  <g>
+    <rect class="bar" x="28" y="132" width="64" height="34" rx="2"></rect>
+    <text class="on-acc" x="36" y="147">crew</text>
+    <text class="on-acc" x="36" y="159" font-size="8.5">worktree</text>
+    <text class="k acc" x="28" y="181">scout</text>
+  </g>
+  <g>
+    <rect class="bar" x="128" y="132" width="64" height="34" rx="2"></rect>
+    <text class="on-acc" x="136" y="147">crew</text>
+    <text class="on-acc" x="136" y="159" font-size="8.5">worktree</text>
+    <text class="k acc" x="128" y="181">ship</text>
+  </g>
+  <g>
+    <rect class="bar" x="228" y="132" width="64" height="34" rx="2"></rect>
+    <text class="on-acc" x="236" y="147">crew</text>
+    <text class="on-acc" x="236" y="159" font-size="8.5">worktree</text>
+    <text class="k acc" x="228" y="181">ship</text>
+  </g>
+
+  <Fragment slot="caption">
+    You talk to one first mate. It hands work to crew, each in an isolated
+    worktree: a scout goes and reports back, a ship makes a change and opens a
+    pull request.
+  </Fragment>
+</SwissFigure>
