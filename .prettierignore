@@ -4,7 +4,8 @@
 # Except these files & folders
 !/src
 !/public
-# Static assets served as-is: vendored bundles (GSAP, HyperFrames player) + the header animation
+# Static assets served as-is: vendored bundles (GSAP, HyperFrames player) + embedded animations
+/public/vendor
 /public/posts
 !/.github
 !tsconfig.json

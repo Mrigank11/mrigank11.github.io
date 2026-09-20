@@ -12,9 +12,13 @@ tags:
 description: With today's models, writing code has become the cheap part — the real work is thinking. Here's the workflow I use to let agents build a real project in parallel, without breaking things.
 ---
 import ArchDiagram from "./ArchDiagram.astro";
-import HeaderAnimation from "./HeaderAnimation.astro";
+import HyperframesEmbed from "@/components/HyperframesEmbed.astro";
 
-<HeaderAnimation />
+<HyperframesEmbed
+  src="/posts/development-at-the-speed-of-thought/header-animation/index.html"
+  poster="/posts/development-at-the-speed-of-thought/header-animation-poster.png"
+  alt="Animated banner: THINK, a foundation of requirements, architecture, tests and orchestration; BUILD, three parallel worktrees; SHIP, everything merged into main."
+/>
 
 Here's what I've come to believe: **writing code has become the cheap part.** Today's models type faster than I do, and get it right more often. What they *can't* do is decide what's worth building, or keep a whole project's worth of decisions in their head while they build it. So the real work has moved up a level — to thinking about the product, and about how the whole thing fits together.
 
