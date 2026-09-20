@@ -14,7 +14,7 @@ const items = headings.filter(h => h.depth === 2 || h.depth === 3);
     <nav
       id="outline-rail"
       aria-label="Outline"
-      class="outline-rail fixed top-1/2 right-4 z-10 hidden -translate-y-1/2 xl:block 2xl:right-8"
+      class="outline-rail fixed top-1/2 right-4 z-10 -translate-y-1/2 2xl:right-8"
     >
       {items.map(h => (
         <a
@@ -39,10 +39,17 @@ const items = headings.filter(h => h.depth === 2 || h.depth === 3);
    * card glides to the hovered row to show that heading's title.
    */
   .outline-rail {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: flex-end;
     padding: 8px 0;
+  }
+  /* Matches Tailwind's xl breakpoint; kept here because this unlayered rule
+     would otherwise override a Tailwind `hidden` utility. */
+  @media (min-width: 1280px) {
+    .outline-rail {
+      display: flex;
+    }
   }
 
   .outline-item {
