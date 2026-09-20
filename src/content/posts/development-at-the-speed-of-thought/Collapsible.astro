@@ -1,0 +1,49 @@
+---
+// Generic openable block: a labelled, closed-by-default disclosure for
+// supporting evidence (case studies, worked examples) that a reader can skip.
+// Native <details>, so it works without JS. The `.collapsible` class exempts it
+// from the inline-disclosure rule for `details` in src/styles/typography.css.
+interface Props {
+  /** Small uppercase label, e.g. "mboard case study". */
+  kicker: string;
+  /** What is inside the block. */
+  title: string;
+  /** Start expanded. Defaults to closed. */
+  open?: boolean;
+}
+
+const { kicker, title, open = false } = Astro.props;
+---
+
+<details
+  class="collapsible group border-border bg-muted/40 my-6 rounded-xl border"
+  open={open}
+>
+  <summary
+    class="flex cursor-pointer list-none items-center gap-3 rounded-xl px-4 py-3 select-none [&::-webkit-details-marker]:hidden"
+  >
+    <svg
+      class="text-accent size-4 shrink-0 transition-transform group-open:rotate-90 motion-reduce:transition-none"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 3l5 5-5 5"></path>
+    </svg>
+    <span class="flex min-w-0 flex-col">
+      <span class="text-accent text-xs font-medium tracking-wide uppercase">
+        {kicker}
+      </span>
+      <span class="text-foreground font-medium">{title}</span>
+    </span>
+  </summary>
+  <div
+    class="border-border border-t px-4 py-4 [&>:first-child]:mt-0 [&>:last-child]:mb-0"
+  >
+    <slot />
+  </div>
+</details>

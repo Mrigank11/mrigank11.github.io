@@ -12,12 +12,16 @@ tags:
 description: With today's models, writing code has become the cheap part — the real work is thinking. Here's the workflow I use to let agents build a real project in parallel, without breaking things.
 ---
 import ArchDiagram from "./ArchDiagram.astro";
+import Collapsible from "./Collapsible.astro";
 
 {/* TODO: header animation goes here — Hyperframes loop (human thinks, agents build in parallel). Poster/still fallback + prefers-reduced-motion. Drop the <video>/component in once the animation task lands. */}
 
 Here's what I've come to believe: **writing code has become the cheap part.** Today's models type faster than I do, and get it right more often. What they *can't* do is decide what's worth building, or keep a whole project's worth of decisions in their head while they build it. So the real work has moved up a level — to thinking about the product, and about how the whole thing fits together.
 
-In this post I'll walk through the workflow I'm using based on my experiments, using my side project **mboard** as the running example. The goal by the end: a setup you can _take inspiration_ from.
+In this post I'll walk through the workflow I'm using based on my experiments. The goal by the end: a setup you can _take inspiration_ from.
+
+{/* REVIEW: connecting text drafted by crew */}
+Each section states the general idea first. Where I have concrete evidence, it sits in a collapsed **case study** block underneath — open it if you want the proof, skip it if you just want the argument. Most of that evidence comes from my side project **mboard**, a Slack-first ticketing tool (a Go backend, a Next.js web UI, and Postgres for storage).
 
 > The goal: The workflow should be such that we only need to think about product direction, and let agents do the development.
 
@@ -48,7 +52,8 @@ Everything else — worktrees, running agents in parallel, reviewing — is abou
 
 And yes, I know: requirements docs, architecture docs, tests. This is all old, boring software-engineering advice. But bear with me — agents turn it from "nice to have" into "the thing holding everything up." The discipline you could get away with skipping on a solo project is exactly the discipline that stops an agent from wrecking it.
 
-Let me make it concrete. **mboard** is a Slack-first ticketing / work-tracking tool — a Go backend (an API plus a Slack bot), a Next.js web UI, and Postgres for storage. One line from its requirements doc does a lot of work: it was *"designed from day one to support the full ticketing vision… so the web UI is an additive surface, not a rewrite."* Hold onto that. Here's the whole flow:
+{/* REVIEW: connecting text drafted by crew */}
+Here's the whole flow. Each step gets the general idea first, with a case study you can open underneath:
 
 1. Gather requirements
 2. Lay the foundation (architecture)
@@ -64,7 +69,11 @@ The first thing I do — before writing a single line of code — is write down 
 - **No implementation details.** This doc is about *what* and *why*, never *how*.
 - **Think ahead.** Try to list out future use-cases now, because the architecture (next step) has to plan for them.
 
-This isn't documentation for its own sake. This doc becomes **the memory the agents read back.** mboard's requirements file is about 250 lines, with zero code. My favourite part isn't the feature list though — it's the "out of scope" section:
+This isn't documentation for its own sake. This doc becomes **the memory the agents read back.** {/* REVIEW: connecting text drafted by crew */}So it's worth being thorough — and worth writing down not just what you're building, but what you're *not*.
+
+<Collapsible kicker="mboard case study" title="A 250-line requirements doc, and its out-of-scope list">
+
+mboard's requirements file is about 250 lines, with zero code. One line from it does a lot of work: the product was *"designed from day one to support the full ticketing vision… so the web UI is an additive surface, not a rewrite."* Hold onto that. My favourite part isn't the feature list though — it's the "out of scope" section:
 
 ```markdown
 ## Out of Scope for v1
@@ -77,9 +86,13 @@ This isn't documentation for its own sake. This doc becomes **the memory the age
 
 That's a written record of **what *not* to build.** So when an agent, three weeks later, "helpfully" starts adding file attachments, the doc is right there saying "not yet — and here's the line." That's Problem 1, solved with a text file.
 
+</Collapsible>
+
 ## Foundation: design for where it's heading
 
 Architecture matters more than ever now — exactly *because* you're going to let agents change the structure later. If the foundation is wrong, an agent's perfectly reasonable-looking refactor will crack the whole thing. So you design not just for today's features, but for where the project is heading.
+
+<Collapsible kicker="mboard case study" title="A core that doesn't know about Slack">
 
 For mboard, the whole trick was making the core **not care which app it's shown in**. The "board" doesn't know Slack exists:
 
@@ -101,9 +114,13 @@ But here's the part that really fights Problem 1. My architecture doc keeps a ru
 
 And where a choice looks odd, it says *why* — for example, the common fields are copied straight onto the ticket row so they're fast to search, while custom fields are read back from the log. Writing down the *why* is the whole difference between an agent respecting a decision and an agent "fixing" it.
 
+</Collapsible>
+
 ## Set up for parallel work
 
 Now the fun part — running agents side by side. Git worktrees give you a separate checkout per branch, but that alone isn't enough: two agents will still fight over the same database and the same port. What you want is **one command that gives each agent its own everything.**
+
+<Collapsible kicker="mboard case study" title="One command: own database, own port">
 
 mboard's `Makefile` builds a database name *from the branch name*, and creates it if it's missing:
 
@@ -130,19 +147,31 @@ dev: dev-setup
 		wait
 ```
 
+</Collapsible>
+
 > The bar to hit: an agent should be able to add a worktree, run one command, and have a fully working app — its own database, its own port. If setup takes any thought, parallel work falls apart.
 
 ## Testing: the safety net that makes speed safe
 
-Tests are the *one thing* that lets an agent add a feature without breaking the last one. In mboard this isn't a suggestion — the agent instructions say it flat out:
+Tests are the *one thing* that lets an agent add a feature without breaking the last one. {/* REVIEW: connecting text drafted by crew */}So the standing rule for every agent is simple: run the tests after every change, and write tests for every feature.
+
+The style of testing is deliberate: **test what the user does, not what the code does.** Each test walks through a whole flow, start to finish. And bugs get the same treatment: write a test that reproduces the bug *before* fixing it. Remember that parallel-merge disaster from earlier? The only reason I caught it was that the deleted feature had a test, and it went red.
+
+**Can you trust tests an agent wrote, though?** Honestly — only partly. They're the safety net, but a net only catches what it actually covers. {/* REVIEW: connecting text drafted by crew */}A bug can pass every test and still break for real users.
+
+<Collapsible kicker="mboard case study" title="The agent instructions, and a bug the tests couldn't see">
+
+In mboard this isn't a suggestion — the agent instructions say it flat out:
 
 > **You must run `make test` after EVERY change.** Write tests for every feature.
 
-The style of testing is deliberate: **test what the user does, not what the code does.** Each test walks through a whole flow, start to finish. And the rule for bugs is spelled out: *"If a bug is found, add a test that reproduces it before fixing."* Remember that parallel-merge disaster from earlier? The only reason I caught it was that the deleted feature had a test, and it went red.
+And the rule for bugs is spelled out too: *"If a bug is found, add a test that reproduces it before fixing."*
 
-**Can you trust tests an agent wrote, though?** Honestly — only partly. They're the safety net, but a net only catches what it actually covers.
+{/* REVIEW: connecting text drafted by crew */}The catch is the bug that slipped through anyway:
 
 > **Note:** mboard's own instructions document a bug the agents kept *re-introducing* — `crypto.randomUUID()` isn't available on a plain-HTTP page, so it broke on the real deploy. But the tests never caught it, because they only ever run against `localhost`, where it works fine.
+
+</Collapsible>
 
 So: lean on tests hard, but keep your own eyes on the kinds of failures they can't see.
 
@@ -162,11 +191,17 @@ The bit I like most: **use the expensive model for planning, the cheap one for t
 
 Here's the twist nobody warns you about. Once agents are churning out correct, tested code this fast, **the slow part becomes *you*.** More than once I've opened a finished PR and genuinely not remembered what I'd asked the agent to do.
 
-So I pushed the job of *making the change easy to review* onto the agent too. Before an agent shows me its work, it fills its own dev database with example data and prepares a little demo *for me*. The idea, in the skill's own words:
+So I pushed the job of *making the change easy to review* onto the agent too. {/* REVIEW: connecting text drafted by crew */}Before an agent shows me its work, it fills its own dev database with example data and prepares a little demo *for me*: one case that shows off the new feature, one that should **not** trigger it, both checked in a browser. I read three sentences, click through five steps, and approve. It takes away a huge chunk of what used to make reviewing agent work feel like a second job.
+
+<Collapsible kicker="Case study" title="The demo prep, in the skill's own words">
+
+{/* REVIEW: connecting text drafted by crew */}This comes from a skill I give my agents (the one that batch-processes a backlog). Its idea, in its own words:
 
 > A passing test suite doesn't let a human actually *look* at the change, and a reviewer shouldn't have to hand-make data to find it.
 
-So the agent sets up the case that shows off the new feature *and* the case that should **not** trigger it, checks it in a browser, then hands me back *"the exact commands to start the app, a one-line before/after, and a numbered click-path naming the example records."* I read three sentences, click through five steps, and approve. It takes away a huge chunk of what used to make reviewing agent work feel like a second job.
+So the agent sets up the case that shows off the new feature *and* the case that should **not** trigger it, checks it in a browser, then hands me back *"the exact commands to start the app, a one-line before/after, and a numbered click-path naming the example records."*
+
+</Collapsible>
 
 {/* TODO: paste one real generated demo write-up here as an example block — the commands + before/after + numbered click-path from an actual run. */}
 
