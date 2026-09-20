@@ -1,0 +1,85 @@
+---
+// mboard data-model diagram: a surface-agnostic core, with the event log
+// as the source of truth. Illustrates why the schema is "extensible".
+---
+
+<figure class="not-prose my-8 flex flex-col items-center">
+  <div class="flex flex-col items-center">
+    <span
+      class="border-border bg-background text-muted-foreground rounded-full border px-3 py-1 text-xs font-medium tracking-wide uppercase"
+    >
+      Surfaces — Slack today, Web UI later
+    </span>
+    <div class="border-border h-4 border-l border-dashed"></div>
+  </div>
+
+  <div class="mb-2 flex items-center gap-2">
+    <span
+      class="border-border bg-muted/40 text-foreground rounded-md border px-3 py-1.5 text-sm"
+    >
+      channel_links
+    </span>
+    <span class="text-muted-foreground text-xs">maps channel → board</span>
+  </div>
+
+  <div class="border-border h-4 border-l border-dashed"></div>
+
+  <div
+    class="border-accent/40 bg-muted/40 relative w-full max-w-md rounded-xl border p-5 pt-8"
+  >
+    <div class="absolute -top-3 left-4 flex items-center gap-2">
+      <span
+        class="bg-background text-accent px-2 text-xs font-medium tracking-wide uppercase"
+      >
+        Surface-agnostic core
+      </span>
+    </div>
+
+    <ul class="text-foreground flex flex-col gap-2 text-sm">
+      <li class="border-border bg-background rounded-md border px-2 py-1.5">
+        <strong>boards</strong> — no Slack columns; the "Area" in the web UI
+      </li>
+      <li
+        class="border-border bg-background flex flex-col gap-1 rounded-md border px-2 py-1.5"
+      >
+        <span><strong>tickets</strong> — built-in fields only</span>
+        <span class="border-border ml-3 border-l pl-3 text-xs">
+          ↳ <strong>ticket_events</strong> — one row per user action
+          <br />
+          <span class="ml-4">
+            ↳ <strong>event_field_changes</strong> — source of truth for
+            custom-field values
+          </span>
+        </span>
+      </li>
+      <li class="border-border bg-background rounded-md border px-2 py-1.5">
+        <strong>field_definitions</strong> — custom-field schema per board
+        (types are data, not migrations)
+      </li>
+    </ul>
+  </div>
+
+  <div class="border-border h-4 border-l border-dashed"></div>
+
+  <div class="flex items-center gap-2">
+    <span
+      class="border-border bg-background text-foreground rounded-md border px-3 py-1.5 text-sm"
+    >
+      users
+    </span>
+    <span
+      class="border-border bg-background text-foreground rounded-md border px-3 py-1.5 text-sm"
+    >
+      user_identities
+    </span>
+    <span class="text-muted-foreground text-xs">all FKs local</span>
+  </div>
+
+  <figcaption class="text-muted-foreground mt-4 text-center text-sm">
+    The board doesn't know Slack exists. Slack is just a row in
+    <code>channel_links</code>; identity is indirected through
+    <code>users</code>; and every custom-field value is derived from the event
+    log. That's what "extensible" bought me — the web UI was an additive
+    surface, not a rewrite.
+  </figcaption>
+</figure>

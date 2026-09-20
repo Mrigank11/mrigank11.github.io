@@ -1,0 +1,188 @@
+---
+author: Mrigank Krishan
+pubDatetime: 2026-09-20T09:00:00+05:30
+title: Development at the speed of thought
+featured: true
+draft: false
+tags:
+  - ai
+  - agents
+  - workflow
+  - claude-code
+description: With today's models, writing code has become the cheap part — the real work is thinking. Here's the workflow I use to let agents build a real project in parallel, without breaking things.
+---
+import ArchDiagram from "./ArchDiagram.astro";
+
+{/* TODO: header animation goes here — Hyperframes loop (human thinks, agents build in parallel). Poster/still fallback + prefers-reduced-motion. Drop the <video>/component in once the animation task lands. */}
+
+Here's what I've come to believe: **writing code has become the cheap part.** Today's models type faster than I do, and get it right more often. What they *can't* do is decide what's worth building, or keep a whole project's worth of decisions in their head while they build it. So the real work has moved up a level — to thinking about the product, and about how the whole thing fits together.
+
+In this post I'll walk through the workflow I'm using based on my experiments, using my side project **mboard** as the running example. The goal by the end: a setup you can _take inspiration_ from.
+
+> The goal: The workflow should be such that we only need to think about product direction, and let agents do the development.
+
+
+## Where agents fall apart
+
+Agents are amazing at one-shot builds. Give a fresh model a clear prompt and it'll spit out something genuinely impressive in one go. But projects don't stay small, and that's where things start to crack. The reason is simple: an agent can only "see" so much at once. Once your project grows past what fits in that window, an agent working on a new feature just can't see the rest of the code. Two problems follow from that:
+
+- **Problem 1: agents forget decisions you already made.** The reasoning behind an earlier choice isn't in front of the agent, so it happily undoes it, or does the opposite.
+- **Problem 2: agents break features that already work.** The agent can't see the code it's about to step on, so it steps on it.
+
+Both of these have bitten me for real. My favourite example: I had two agents working at the same time on mboard — one reworking the subtasks panel, one adding board-name links. When I merged their work, the subtasks rework had **quietly deleted** the other agent's feature. The only reason I caught it was that the second agent's tests went red:
+
+> B's SubtasksPanel rework dropped E's board-name changes: re-add the boardName prop + subtask-list testid, and route the promoted-subtask link through ticketHref so cat-e's fold-persistence and routing e2e tests pass.
+
+That's Problem 2, happening live, inside the exact parallel setup I'm about to recommend. The lesson isn't "don't run agents in parallel" — it's that parallel only works once you've built the safety nets first. (There's a quieter version too: another time an agent added a bit of "auto-sync" code that undid columns I had *just* unchecked. The feature fought me. Small bug, same family.)
+
+## The fix is the setup, not the prompt
+
+Here's the shift that changed things for me: the answer is **not** a cleverer prompt. It's building an environment that does two things — remembers your decisions for you (so they survive even when they fall out of the agent's view), and catches breakage automatically.
+
+Line that up against the two problems:
+
+- Written-down **requirements** + an **architecture doc** → your decisions, remembered (fixes Problem 1).
+- Architecture built for change + a real **test suite** → breakage caught early (fixes Problem 2).
+
+Everything else — worktrees, running agents in parallel, reviewing — is about doing all this *fast*.
+
+And yes, I know: requirements docs, architecture docs, tests. This is all old, boring software-engineering advice. But bear with me — agents turn it from "nice to have" into "the thing holding everything up." The discipline you could get away with skipping on a solo project is exactly the discipline that stops an agent from wrecking it.
+
+Let me make it concrete. **mboard** is a Slack-first ticketing / work-tracking tool — a Go backend (an API plus a Slack bot), a Next.js web UI, and Postgres for storage. One line from its requirements doc does a lot of work: it was *"designed from day one to support the full ticketing vision… so the web UI is an additive surface, not a rewrite."* Hold onto that. Here's the whole flow:
+
+1. Gather requirements
+2. Lay the foundation (architecture)
+3. Set up for parallel work
+4. Testing
+5. Running agents at scale
+6. Reviewing — the new bottleneck
+
+## Requirements: write down what you want
+
+The first thing I do — before writing a single line of code — is write down what the product should do. In as much detail as I can, going back and forth with a good reasoning model until I'm happy. Two rules:
+
+- **No implementation details.** This doc is about *what* and *why*, never *how*.
+- **Think ahead.** Try to list out future use-cases now, because the architecture (next step) has to plan for them.
+
+This isn't documentation for its own sake. This doc becomes **the memory the agents read back.** mboard's requirements file is about 250 lines, with zero code. My favourite part isn't the feature list though — it's the "out of scope" section:
+
+```markdown
+## Out of Scope for v1
+- Web UI (designed for, built later).
+- Email notifications.
+- SSO / login integration.
+- File or image attachments.
+- Per-board access control (all boards visible to everyone in v1).
+```
+
+That's a written record of **what *not* to build.** So when an agent, three weeks later, "helpfully" starts adding file attachments, the doc is right there saying "not yet — and here's the line." That's Problem 1, solved with a text file.
+
+## Foundation: design for where it's heading
+
+Architecture matters more than ever now — exactly *because* you're going to let agents change the structure later. If the foundation is wrong, an agent's perfectly reasonable-looking refactor will crack the whole thing. So you design not just for today's features, but for where the project is heading.
+
+For mboard, the whole trick was making the core **not care which app it's shown in**. The "board" doesn't know Slack exists:
+
+<ArchDiagram />
+
+Three decisions carried it:
+
+- **The core doesn't know about Slack.** In the doc's words: *"the board itself has no Slack columns. A linking table maps channels → boards."* This is the one that paid off most: the same board later became the web UI's "Area" with **no rewrite**. Exactly what the requirements promised.
+- **User lookups go through one middle table.** There's a `users` table, and a separate table that maps "this Slack user = this local user." Everything points at the local user. So a future login provider slots in without touching every table.
+- **The activity log is the source of truth.** Every action on a ticket is one event; a custom field's current value is worked out *from the log*, not stored twice. Adding a new field type is just data — no database migration.
+
+But here's the part that really fights Problem 1. My architecture doc keeps a running list of **decisions I've already settled**:
+
+```markdown
+## Resolved Decisions
+- Local users table — Yes. Everything points at users.id.
+- Multi-workspace — Not yet. Assume one org for v1.
+```
+
+And where a choice looks odd, it says *why* — for example, the common fields are copied straight onto the ticket row so they're fast to search, while custom fields are read back from the log. Writing down the *why* is the whole difference between an agent respecting a decision and an agent "fixing" it.
+
+## Set up for parallel work
+
+Now the fun part — running agents side by side. Git worktrees give you a separate checkout per branch, but that alone isn't enough: two agents will still fight over the same database and the same port. What you want is **one command that gives each agent its own everything.**
+
+mboard's `Makefile` builds a database name *from the branch name*, and creates it if it's missing:
+
+```makefile
+dev-setup:
+	# turn the current branch name into a safe db name, e.g. mboard_my_feature
+	$(eval BRANCH := $(shell git branch --show-current | sed 's/[^a-zA-Z0-9]/_/g'))
+	$(eval DB := mboard_$(BRANCH))
+	# create that database only if it doesn't already exist
+	@psql ... -tc "SELECT 1 FROM pg_database WHERE datname='$(DB)'" | grep -q 1 || \
+		psql ... -c "CREATE DATABASE $(DB)"
+	@echo "==> Dev env ready: $(DB)"
+```
+
+And `make dev` grabs a free port on its own and starts both servers, so five worktrees can run five copies of the app without tripping over each other:
+
+```makefile
+dev: dev-setup
+	# ask the OS for any free port instead of hardcoding one
+	$(eval API_PORT := $(shell python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()'))
+	@trap 'kill 0' EXIT; \
+		$(MAKE) run-api DATABASE_URL=...$(DB)... PORT=$(API_PORT) & \
+		API_URL=http://localhost:$(API_PORT) $(MAKE) run-web & \
+		wait
+```
+
+> The bar to hit: an agent should be able to add a worktree, run one command, and have a fully working app — its own database, its own port. If setup takes any thought, parallel work falls apart.
+
+## Testing: the safety net that makes speed safe
+
+Tests are the *one thing* that lets an agent add a feature without breaking the last one. In mboard this isn't a suggestion — the agent instructions say it flat out:
+
+> **You must run `make test` after EVERY change.** Write tests for every feature.
+
+The style of testing is deliberate: **test what the user does, not what the code does.** Each test walks through a whole flow, start to finish. And the rule for bugs is spelled out: *"If a bug is found, add a test that reproduces it before fixing."* Remember that parallel-merge disaster from earlier? The only reason I caught it was that the deleted feature had a test, and it went red.
+
+**Can you trust tests an agent wrote, though?** Honestly — only partly. They're the safety net, but a net only catches what it actually covers.
+
+> **Note:** mboard's own instructions document a bug the agents kept *re-introducing* — `crypto.randomUUID()` isn't available on a plain-HTTP page, so it broke on the real deploy. But the tests never caught it, because they only ever run against `localhost`, where it works fine.
+
+So: lean on tests hard, but keep your own eyes on the kinds of failures they can't see.
+
+## Running agents at scale
+
+My first taste of this loop was [vibe-kanban](https://www.vibekanban.com/), and it really clicked for me — you file tickets like GitHub issues, agents pick them up and build in their own isolated worktrees, and you just review the diffs and approve. It felt like the future the first time I saw it. If you've never seen it in action, [their overview video](https://www.youtube.com/watch?v=Kzn-32djk2U) is a couple of minutes well spent.
+
+> **Note:** the company behind vibe-kanban has since shut down, but the project lives on as open-source and community-maintained.
+
+Eventually I built my own version on top of [Paseo](https://paseo.dev), because I wanted something a bit more hands-on than a board. The idea is **talk to one agent, ship with a team:** I talk to a single "first mate", which writes up each task, hands it to worker agents in their own worktrees, watches them finish, and gives me back finished pull requests or reports — it never touches the code itself. The difference from vibe-kanban is that it's more like a small team with a lead than a to-do board: work is either a "scout" (go look into something and report back) or a "ship" (make a change and open a PR), and nothing gets merged unless I say so.
+
+The bit I like most: **use the expensive model for planning, the cheap one for typing.** Hard planning goes to a top-tier model; the actual implementation goes to a cheaper one working in its own worktree, thrown away after merge. Pay for judgement, not for typing.
+
+{/* TODO: optional screenshot of a vibe-kanban board and/or the first-mate view. Drop images into this folder and reference them here. */}
+
+## Reviewing: the new bottleneck
+
+Here's the twist nobody warns you about. Once agents are churning out correct, tested code this fast, **the slow part becomes *you*.** More than once I've opened a finished PR and genuinely not remembered what I'd asked the agent to do.
+
+So I pushed the job of *making the change easy to review* onto the agent too. Before an agent shows me its work, it fills its own dev database with example data and prepares a little demo *for me*. The idea, in the skill's own words:
+
+> A passing test suite doesn't let a human actually *look* at the change, and a reviewer shouldn't have to hand-make data to find it.
+
+So the agent sets up the case that shows off the new feature *and* the case that should **not** trigger it, checks it in a browser, then hands me back *"the exact commands to start the app, a one-line before/after, and a numbered click-path naming the example records."* I read three sentences, click through five steps, and approve. It takes away a huge chunk of what used to make reviewing agent work feel like a second job.
+
+{/* TODO: paste one real generated demo write-up here as an example block — the commands + before/after + numbered click-path from an actual run. */}
+
+## Wrapping up
+
+So if you want to try this on your own project, here's the whole thing in one list:
+
+1. **Write down what you want** — detailed, no code. This becomes the agents' memory.
+2. **Design a foundation that expects change** — and write down *why* you chose it.
+3. **Make isolated dev environments a one-liner** — own database, own port, per branch.
+4. **Let tests be the safety net** — test full flows, add a test for every bug.
+5. **Run agents in parallel** — file the work, let them build, don't merge blindly.
+6. **Make review cheap** — have the agent prepare the demo for you.
+
+None of these pieces are new. What's new is that agents turn each one from optional into essential. And once they're all in place, the honest bottleneck really is **how fast you can decide what to build next.**
+
+That's the whole pitch. Writing the code isn't the hard part anymore — thinking is. Build the setup that lets you spend your time there.
+
+{/* TODO: optional "what next" / further-reading links per house style. */}
