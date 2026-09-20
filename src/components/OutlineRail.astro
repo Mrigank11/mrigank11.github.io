@@ -1,0 +1,243 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter(h => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length >= 2 && (
+    <nav
+      id="outline-rail"
+      aria-label="Outline"
+      class="outline-rail fixed top-1/2 right-4 z-10 hidden -translate-y-1/2 xl:block 2xl:right-8"
+    >
+      {items.map(h => (
+        <a
+          href={`#${h.slug}`}
+          data-outline-id={h.slug}
+          data-outline-text={h.text}
+          aria-label={h.text}
+          class:list={["outline-item", h.depth === 3 && "is-sub"]}
+        >
+          <span class="outline-tick" />
+        </a>
+      ))}
+      <div class="outline-card" aria-hidden="true"></div>
+    </nav>
+  )
+}
+
+<style>
+  /*
+   * A rail of ticks that never changes shape. The hovered tick grows and
+   * brightens, its neighbours taper off around it (dock-style), and a single
+   * card glides to the hovered row to show that heading's title.
+   */
+  .outline-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 8px 0;
+  }
+
+  .outline-item {
+    --base: 14px;
+    --bonus: 0px;
+    --op: 0.4;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 44px;
+    height: 13px;
+    text-decoration: none;
+  }
+  .outline-item.is-sub {
+    --base: 9px;
+  }
+  .outline-item[data-active] {
+    --base: 24px;
+    --op: 1;
+  }
+
+  .outline-tick {
+    width: calc(var(--base) + var(--bonus));
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--muted-foreground);
+    opacity: var(--op);
+    transition:
+      width 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.15s,
+      background-color 0.15s;
+  }
+  .outline-item[data-active] .outline-tick {
+    background-color: var(--foreground);
+  }
+
+  /* Dock falloff: hovered row, then one to three rows either side. */
+  .outline-item:is(:hover, :focus-visible) {
+    --bonus: 14px;
+    --op: 1;
+  }
+  .outline-item:is(:hover, :focus-visible) .outline-tick {
+    background-color: var(--foreground);
+  }
+  .outline-item:is(:hover, :focus-visible) + .outline-item,
+  .outline-item:has(+ .outline-item:is(:hover, :focus-visible)) {
+    --bonus: 9px;
+    --op: 0.7;
+  }
+  .outline-item:is(:hover, :focus-visible) + .outline-item + .outline-item,
+  .outline-item:has(+ .outline-item + .outline-item:is(:hover, :focus-visible)) {
+    --bonus: 5px;
+    --op: 0.55;
+  }
+  .outline-item:is(:hover, :focus-visible)
+    + .outline-item
+    + .outline-item
+    + .outline-item,
+  .outline-item:has(
+      + .outline-item + .outline-item + .outline-item:is(:hover, :focus-visible)
+    ) {
+    --bonus: 2px;
+    --op: 0.45;
+  }
+
+  .outline-card {
+    position: absolute;
+    top: 0;
+    right: calc(100% + 8px);
+    max-width: 320px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background-color: var(--muted);
+    color: var(--foreground);
+    font-size: 14px;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(6px, -50%);
+    transition:
+      opacity 0.15s,
+      transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      top 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .outline-rail[data-open] .outline-card {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .outline-tick,
+    .outline-card {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  let cleanup: (() => void) | undefined;
+
+  function initOutlineRail() {
+    cleanup?.();
+    cleanup = undefined;
+
+    const rail = document.getElementById("outline-rail");
+    if (!rail) return;
+
+    const targets = [
+      ...new Set(
+        [...rail.querySelectorAll<HTMLElement>("a[data-outline-id]")].map(
+          a => a.dataset.outlineId!
+        )
+      ),
+    ]
+      .map(id => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (targets.length === 0) return;
+
+    const setActive = (id: string) => {
+      rail.querySelectorAll<HTMLElement>("[data-outline-id]").forEach(el => {
+        el.toggleAttribute("data-active", el.dataset.outlineId === id);
+      });
+    };
+
+    // The current section is the last heading that has scrolled past the
+    // reading line near the top of the viewport.
+    const update = () => {
+      let current = targets[0];
+      for (const el of targets) {
+        if (el.getBoundingClientRect().top <= 96) current = el;
+        else break;
+      }
+      setActive(current.id);
+    };
+
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element).closest<HTMLAnchorElement>(
+        "a[data-outline-id]"
+      );
+      if (!link) return;
+      const target = document.getElementById(link.dataset.outlineId!);
+      if (!target) return;
+      e.preventDefault();
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      target.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+      history.replaceState(null, "", `#${target.id}`);
+    };
+
+    const card = rail.querySelector<HTMLElement>(".outline-card")!;
+    const showCard = (e: Event) => {
+      const link = (e.target as Element).closest<HTMLElement>(
+        "a[data-outline-id]"
+      );
+      if (!link) return;
+      card.textContent = link.dataset.outlineText ?? "";
+      card.style.top = `${link.offsetTop + link.offsetHeight / 2}px`;
+      rail.setAttribute("data-open", "");
+    };
+    const hideCard = () => rail.removeAttribute("data-open");
+    rail.addEventListener("pointerover", showCard);
+    rail.addEventListener("focusin", showCard);
+    rail.addEventListener("pointerleave", hideCard);
+    rail.addEventListener("focusout", hideCard);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    rail.addEventListener("click", onClick);
+    update();
+
+    cleanup = () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      rail.removeEventListener("click", onClick);
+      rail.removeEventListener("pointerover", showCard);
+      rail.removeEventListener("focusin", showCard);
+      rail.removeEventListener("pointerleave", hideCard);
+      rail.removeEventListener("focusout", hideCard);
+    };
+  }
+
+  initOutlineRail();
+  document.addEventListener("astro:page-load", initOutlineRail);
+</script>
