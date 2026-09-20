@@ -4,6 +4,8 @@
 # Except these files & folders
 !/src
 !/public
+# Static assets served as-is: vendored bundles (GSAP, HyperFrames player) + the header animation
+/public/posts
 !/.github
 !tsconfig.json
 !astro.config.ts
