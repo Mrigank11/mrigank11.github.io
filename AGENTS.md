@@ -39,10 +39,11 @@ import HyperframesEmbed from "@/components/HyperframesEmbed.astro";
 />
 ```
 
-Put the composition in `public/` with its GSAP and fonts self-hosted next to
-it (no CDN links), and render the poster from the live page at a resolved
+Put the composition in `public/` and reference its GSAP and fonts by absolute
+`/vendor/...` paths (no CDN links), and render the poster from the live page at a resolved
 frame (a suppressed seek skips `onUpdate`, so seek with events enabled). The
 component pauses offscreen and, under `prefers-reduced-motion`, shows only the
 poster and never loads the player. Pass `width`/`height` (default 1600x600) if
-the composition has a different aspect ratio. The player bundle is vendored in
-`public/vendor/`; bump it there when upgrading.
+the composition has a different aspect ratio. The player bundle, GSAP
+(`gsap-<version>.min.js`) and the shared fonts (`fonts/`) are vendored in
+`public/vendor/`; bump them there when upgrading.
