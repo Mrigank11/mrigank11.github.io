@@ -39,11 +39,12 @@ const PLAYER_SRC = "/vendor/hyperframes-player-0.8.56.global.js";
 
 <figure
   class:list={[
-    "not-prose border-border my-8 overflow-hidden rounded-lg border",
+    "hf-embed not-prose border-border my-10 overflow-hidden border-y",
     className,
   ]}
   style={`background: ${background}`}
   data-hyperframes-embed
+  data-no-zoom
   data-player-src={PLAYER_SRC}
 >
   <div class="relative w-full" style={`aspect-ratio: ${width} / ${height}`}>
@@ -65,6 +66,24 @@ const PLAYER_SRC = "/vendor/hyperframes-player-0.8.56.global.js";
     ></hyperframes-player>
   </div>
 </figure>
+
+<style>
+  /* Wide, squared breakout: 8rem wider than the 48rem text column, centred on
+     it, never narrower than the column. Phones keep the column width. At xl
+     the outline rail pins to the right edge, so leave it clearance. */
+  @media (min-width: 768px) {
+    .hf-embed {
+      --w: max(100%, min(64rem, calc(100vw - 4rem)));
+      width: var(--w);
+      margin-inline: calc((100% - var(--w)) / 2);
+    }
+  }
+  @media (min-width: 1280px) {
+    .hf-embed {
+      --w: max(100%, min(64rem, calc(100vw - 12rem)));
+    }
+  }
+</style>
 
 <script>
   interface Player extends HTMLElement {
