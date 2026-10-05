@@ -1,10 +1,10 @@
 ---
 import SwissFigure from "../development-at-the-speed-of-thought/SwissFigure.astro";
 
-// REVIEW: Handy's 0.0096 Wh/min follows from its stated 0.0127 Wh over 79.1 s,
-// but its stated 0.42 W over 79.1 s is only about 0.0092 Wh (about 0.0070
-// Wh/min). The two Handy numbers do not reconcile; FluidVoice's do.
-// Confirm which is right before publishing.
+// Handy's 0.0096 Wh/min follows from its stated 0.0127 Wh over 79.1 s of
+// speech. That 0.0127 Wh doesn't reconcile with Handy's own power rails
+// (0.42 W x 79.1 s is about 0.0092 Wh); see the post's methodology note.
+// Bar heights use the numbers as recorded, not the reconciled ones.
 
 // 0.01 Wh/min = 39.63px; baseline at y = 180.
 const base = 180;

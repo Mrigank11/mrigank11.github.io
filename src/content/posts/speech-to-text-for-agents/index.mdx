@@ -53,7 +53,6 @@ Here is the map of this post:
 
 The first and most obvious way is a cloud solution. You hold a key and speak. The audio goes to the company's servers, and clean text comes back at your cursor. Your voice takes a round trip to a data center just to end up in a text box a few centimeters from your face.
 
-{/* REVIEW: Wispr Flow "best-known" and "set the bar" are the captain's claims; not re-checked against current pricing or features. */}
 Wispr Flow is the best-known one. The UX is great, and that is what set the bar for everything after it.
 
 At this point you have the feel we want. But there are three problems:
@@ -84,12 +83,9 @@ There are many free apps now. I looked at five of them, and only two made it to 
 
 Here are the three I set aside, in the order I looked at them:
 
-- **OpenWhispr** is free and open source, and it does a lot: dictation, meeting notes and even an agent you can talk to. It works on Windows, Mac and Linux, and it works offline. But it is built with Electron. Shipping a whole browser so an app can wait for me to hold a key felt like a lot, and to me it also felt slow. This is an app that has to react the moment you press a key. I prefer apps written in Rust. I like my dictation apps a little rusty.
-- **OpenSuperWhisper** is a decent app. It is free, it works only on Mac, and it lets you pick from several on-device models. But it is fairly new, and the other options offered more features, so I passed on it.
-- **VoiceInk** is the odd one out, because it is not free. You pay once, between $25 and $49 depending on how many Macs you use it on, and there is no monthly fee. There is a free trial, and the source is public. It runs the models locally, and it works on Mac (there is also an iOS version), but only on Apple Silicon. I passed on it because it is paid.
-
-{/* REVIEW: this fairness line is crew's addition (from the outline report), not in the captain's draft. Keep, reword or cut. */}
-"It is paid" and "it is new" are my preferences, not verdicts. Either of those two may well be great for you.
+- **OpenWhispr** is free and open source, and it does a lot: dictation, meeting notes, even an agent you can talk to. It works on Windows, Mac and Linux, offline. But it's built with Electron, and shipping a whole browser so an app can wait for a keypress felt like a lot. It felt slow too, for something that has to react the instant you press a key. I like my dictation apps a little rusty.
+- **OpenSuperWhisper** is a decent app. Free, Mac only, and it lets you pick from several on-device models. But it's fairly new, and I passed simply because the others offered more.
+- **VoiceInk** is the odd one out: it's not free. One-time payment, $25 to $49 depending on how many Macs you use it on, no monthly fee, free trial, source public. It runs models locally on Mac (there's an iOS app too), but Apple Silicon only. I passed because it's paid.
 
 **Note**: A dictation app sits in the background all day. A small, quick app is one you forget is there, and that is exactly what you want.
 
@@ -107,7 +103,7 @@ The pipeline is simple: mic, then Silero VAD to drop the silence, then Whisper o
 
 The backend is Rust (audio, VAD, inference) and the UI is React on Tauri, so there is no bundled Chromium. This is the main reason it made my list.
 
-**Note**: The Handy folks say they are not trying to build the fanciest app. They want one that is easy to fork and extend.
+**Note**: Handy's own goal, [per their README](https://github.com/cjpais/Handy), isn't to be the fanciest app: a simple, well-patterned codebase that's easy to fork and build on.
 
 But what if you are on a newer Mac, and want it even lighter?
 
@@ -115,8 +111,7 @@ But what if you are on a newer Mac, and want it even lighter?
 
 FluidVoice is also free and open source. It is a Swift app, Mac only, built on top of FluidAudio, an SDK that runs the models on the Apple Neural Engine.
 
-{/* REVIEW: 210x RTFx and 2.5% WER are the captain's figures. FluidAudio's Documentation/Benchmarks.md (M4 Pro, 2024 MacBook Pro) currently lists English (US) at 207.4x RTFx, 5.4% WER and 2.5% CER, so "2.5% WER" may really be CER, and 210x is a rounding of 207.4x. Check against the source the captain used, then fix or keep. The M4 Pro is FluidAudio's test machine; confirm it is not the chip used for the energy run. */}
-These are FluidAudio's own numbers, not mine, measured on an M4 Pro: Parakeet TDT 0.6B runs at about 210x real time (RTFx), with 2.5% WER on English. The idea is that the CPU and GPU stay free for everything else.
+These are [FluidAudio's own numbers](https://github.com/FluidInference/FluidAudio/blob/a8f1482357748ba5487d07a1d25025c22818b7dc/Documentation/Benchmarks.md), not mine, measured on an M4 Pro: Parakeet TDT 0.6B v3 runs at 207x real time (RTFx) on English, and 2.5% average word error rate on LibriSpeech test-clean (two different benchmark runs, same chip). The idea is that the CPU and GPU stay free for everything else.
 
 **Note**: The app is open source, but the formatting model that cleans up your text is a private runtime.
 
@@ -146,32 +141,28 @@ That was my expectation going in.
 
 ## Handy vs FluidVoice
 
-I ran both side by side, and the first thing that stood out was battery. FluidVoice used more of it than Handy, even though it runs on the Apple Neural Engine, which is the opposite of what I expected. Following are the numbers from a live dictation run in each app.
+I ran both side by side, and the first thing that stood out was battery. FluidVoice used more of it than Handy, even though it runs on the Apple Neural Engine, which is the opposite of what I expected. Here's what a live dictation run in each app showed.
 
 First, the headline: energy per minute of speech.
 
 <EnergyPerMinute />
 
-{/* REVIEW: why 3.4x. Per minute is the captain's choice; the sentence below and the Collapsible give the reason and the two other multipliers, all derived from the captain's numbers (0.0459 / 0.0127 = 3.6x, 1.94 / 0.42 = 4.6x). */}
-I am quoting energy per minute because the two runs were different lengths: 79.1 s of speech for Handy, about 84 s for FluidVoice. Raw energy gives 3.6x and combined power gives 4.6x, so 3.4x is the most conservative of the three.
+I'm quoting per minute because the two runs weren't the same length (79.1 s of speech for Handy, about 84 s for FluidVoice), and it's the most conservative of three ways to frame the gap. More on that in the methodology note below.
 
 And this is where the power goes:
 
 <PowerBreakdown />
 
-Following are the two things that stand out:
+Two things stand out:
 
 - **The CPU did not go quiet.** FluidVoice's CPU averaged 1.27 W, against 0.29 W for Handy. Moving the model to the Neural Engine didn't take the CPU out of the picture.
 - **The Neural Engine is not free.** At 0.65 W, it drew more on its own than Handy's CPU, GPU and Neural Engine combined (0.42 W).
 
 FluidVoice did use less GPU (0.03 W against 0.13 W), but a 0.1 W difference is small next to the rest.
 
-{/* REVIEW: caveats added by crew from the outline report (n=1, whole-app comparison). Captain to confirm the models each app ran (Handy: Whisper or Parakeet V3? FluidVoice: Parakeet TDT 0.6B?), since that decides how much of this is silicon and how much is model. */}
-**Note**: This is one live dictation run in each app, so it is a data point, not a benchmark. It also compares two whole apps (the app, the model it ran and the hardware it chose), not the GPU and the Neural Engine in isolation.
+**Note**: This is one run per app, not a benchmark, and it compares two whole stacks (app, model and chip together), not the GPU and the Neural Engine in isolation. I didn't log the exact model each ran that day, so I can't say how much of the gap is silicon and how much is model choice.
 
 <Collapsible kicker="Measurement notes" title="How I measured this, and the raw numbers">
-
-{/* REVIEW: the measurement tool, the window and what "measured energy" includes are missing from the draft. Fill in (e.g. powermetrics over the dictation window?). Also: Handy's 0.42 W over 79.1 s is about 0.0092 Wh, but the table says 0.0127 Wh (about 0.58 W). FluidVoice's numbers reconcile (1.94 W over 84 s is about 0.0453 Wh vs 0.0459). Decide what to publish. */}
 
 | Metric | Handy | FluidVoice |
 |---|---|---|
@@ -183,13 +174,14 @@ FluidVoice did use less GPU (0.03 W against 0.13 W), but a 0.1 W difference is s
 | Measured energy | 0.0127 Wh | 0.0459 Wh |
 | Energy per minute spoken | ~0.0096 Wh/min | ~0.0328 Wh/min |
 
-Energy per minute is the measured energy divided by the minutes of speech. Combined is the CPU, GPU and Neural Engine power added together. Each column is a single run.
+Energy per minute is the measured energy divided by the minutes of speech. Combined is the CPU, GPU and Neural Engine power added together. Each column is a single run, and I didn't write down the exact tool or capture window, so treat these as directional, not lab-grade.
+
+Three ways to read the gap: per minute gives 3.4x, raw measured energy gives 3.6x, and instantaneous combined power gives 4.6x. Per minute is the fairest, since it normalizes for the different run lengths, so that's the headline above.
+
+One number here doesn't add up, and I'd rather say so than quietly fix it: Handy's three power rails (0.42 W combined) over 79.1 s work out to about 0.0092 Wh, not the 0.0127 Wh in the table. FluidVoice's does reconcile (1.94 W x 84 s is about 0.045 Wh, close to the stated 0.0459 Wh). I don't know why Handy's doesn't; maybe the capture window ran past the spoken audio, or something outside those three rails got counted. I'm publishing the numbers as recorded rather than guessing at a fix.
 
 </Collapsible>
 
 So running on the Apple Neural Engine doesn't guarantee lower battery use, at least in my testing. Battery wasn't the only place Handy came out ahead, though. I also really liked its UX.
-
-{/* REVIEW: the "one run, a newer build could close the gap" hedge is crew's addition from the outline report. */}
-It is one run, so a newer FluidAudio or Core ML build could well close the gap.
 
 Handy is very easy to use and fast, so I'm using it to draft this blog post as well.

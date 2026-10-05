@@ -1,10 +1,11 @@
 ---
 import SwissFigure from "../development-at-the-speed-of-thought/SwissFigure.astro";
 
-// REVIEW: the rails as stated add up to 0.42 W for Handy but 1.95 W for
-// FluidVoice (1.27 + 0.03 + 0.65), while the draft's "combined" row says 1.94 W.
-// The total label uses the draft's 1.94 W; the bar heights use the rails.
-// Also see the Handy energy note in EnergyPerMinute.astro.
+// The rails as stated add up to 0.42 W for Handy and 1.95 W for FluidVoice
+// (1.27 + 0.03 + 0.65), a cent of a watt over the recorded "combined" 1.94 W,
+// which is rounding from the individually-rounded rails. The total label uses
+// the recorded 1.94 W; the bar heights use the rails. See the post's
+// methodology note for the larger Handy energy mismatch.
 
 // Watts to px: 1.95 W = 132px, so 0.5 W = ~33.8px. Baseline at y = 180.
 const base = 180;
